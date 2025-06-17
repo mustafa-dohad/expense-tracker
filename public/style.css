@@ -1,0 +1,141 @@
+:root {
+  --primary: #124e66;
+
+  /* Dark theme (default) */
+  --bg: #212A31;
+  --container-bg: #2E3944;
+  --text: #D3D9D4;
+  --input-bg: #1e2a33;
+  --border: #3c4a55;
+  --form-toggle-bg: transparent;
+  --form-toggle-text: #D3D9D4;
+  --form-toggle-active-bg: #124e66;
+  --form-toggle-active-text: #ffffff;
+}
+
+
+body.light {
+  /* Light theme overrides */
+  --bg: #ffffff;
+  --container-bg: #f7f9fb;
+  --text: #212a31;
+  --input-bg: #ffffff;
+  --form-toggle-bg: transparent;
+  --form-toggle-text: #333;
+  --form-toggle-active-bg: #244855;
+  --form-toggle-active-text: #ffffff;
+}
+
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 2rem;
+}
+
+.theme-toggle {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+.theme-toggle button {
+  background: none;
+  border: none;
+  font-size: 2.5rem;
+  cursor: pointer;
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 420px;
+  background-color: var(--container-bg);
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  margin-top: 60px;
+}
+
+.title {
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.form-toggle {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  gap: 10px;
+}
+
+.form-toggle button {
+  padding: 10px 20px;
+  border: 1px solid var(--border);
+  background-color: var(--form-toggle-bg);
+  color: var(--form-toggle-text);
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.form-toggle button.active {
+  background-color: var(--form-toggle-active-bg);
+  color: var(--form-toggle-active-text);
+  border-color: var(--form-toggle-active-bg);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.auth-form input {
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background-color: var(--input-bg);
+  color: var(--text);
+}
+
+.auth-form input:focus {
+  border-color: var(--primary);
+  outline: none;
+}
+
+.auth-form button {
+  padding: 12px;
+  font-size: 1rem;
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.auth-form button:hover {
+  background-color: #0f3e53;
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 1.5rem;
+  }
+}
