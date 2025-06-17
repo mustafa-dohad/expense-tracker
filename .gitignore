@@ -1,0 +1,20 @@
+# Ignore environment config
+.env
+
+# Ignore Composer dependencies (can be installed via composer install)
+vendor/
+
+# Ignore OS files
+.DS_Store
+
+# Ignore editor configs
+.vscode/
+*.code-workspace
+
+# Ignore log files
+*.log
+
+# Ignore database dumps or temp files
+*.sql
+*.bak
+*.tmp
