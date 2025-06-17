@@ -1,12 +1,4 @@
 
--- ================================================
--- EXPENSE TRACKER DATABASE SCHEMA (REVISED)
--- ================================================
-
--- Create Database
-CREATE DATABASE IF NOT EXISTS expense_tracker;
-USE expense_tracker;
-
 -- USERS TABLE
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
