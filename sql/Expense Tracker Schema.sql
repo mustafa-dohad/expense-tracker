@@ -1,7 +1,6 @@
 
 -- ================================================
 -- EXPENSE TRACKER DATABASE SCHEMA (REVISED)
--- Includes suggested improvements by ChatGPT
 -- ================================================
 
 -- Create Database

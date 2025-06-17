@@ -1,0 +1,13 @@
+{
+    "name": "mustafamurtaza/expense-tracker",
+    "description": "Wallet app backend using PHP and MySQL",
+    "authors": [
+        {
+            "name": "Mustafa Dohad",
+            "email": "mustafamurtazadohad@gmail.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    }
+}
