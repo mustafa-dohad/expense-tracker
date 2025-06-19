@@ -1,25 +1,25 @@
 :root {
-  --primary: #124e66;
+  --primary: #0fa4af; /* Teal accent */
 
-  /* Dark theme (default) */
-  --bg: #212A31;
-  --container-bg: #2E3944;
-  --text: #D3D9D4;
-  --input-bg: #1e2a33;
-  --border: #3c4a55;
-  --form-toggle-bg: transparent;
-  --form-toggle-text: #D3D9D4;
-  --form-toggle-active-bg: #124e66;
+  /* DARK MODE (default) */
+  --bg: #121212;
+  --container-bg: #1e1e1e;
+  --text: #f2f2f2;
+  --input-bg: #2a2a2a;
+  --border: #3a3a3a;
+  --form-toggle-bg: #2a2a2a;
+  --form-toggle-text: #bbbbbb;
+  --form-toggle-active-bg: var(--primary);
   --form-toggle-active-text: #ffffff;
 }
 
-
 body.light {
-  /* Light theme overrides */
+  /* LIGHT MODE */
   --bg: #ffffff;
   --container-bg: #f7f9fb;
   --text: #212a31;
   --input-bg: #ffffff;
+  --border: #dce3e8;
   --form-toggle-bg: transparent;
   --form-toggle-text: #333;
   --form-toggle-active-bg: #244855;
@@ -27,11 +27,12 @@ body.light {
 }
 
 * {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   background-color: var(--bg);
   color: var(--text);
   margin: 0;
@@ -59,11 +60,12 @@ body {
 .auth-container {
   width: 100%;
   max-width: 420px;
-  background-color: var(--container-bg);
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
   margin-top: 60px;
+  padding: 2.5rem;
+  border-radius: 10px;
+  background-color: var(--container-bg);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); /* more depth */
+  transition: background 0.3s, box-shadow 0.3s;
 }
 
 .title {
@@ -132,6 +134,52 @@ body {
 
 .hidden {
   display: none;
+}
+.message {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  color: var(--primary);
+}
+
+.footer-links {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--form-toggle-text);
+}
+
+.footer-links a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.small-link {
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #ffffff;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @media (max-width: 480px) {

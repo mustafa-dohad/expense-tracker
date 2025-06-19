@@ -1,18 +1,44 @@
 <?php
-require 'db.php';
+ini_set("display_errors", 1);
+error_reporting(E_ALL);
 
-$data = json_decode(file_get_contents("php://input"), true);
-$username = $data['username'];
-$email = $data['email'];
-$password = password_hash($data['password'], PASSWORD_BCRYPT);
-$first = $data['first_name'];
-$last = $data['last_name'];
+include 'db.php';
 
-$stmt = $pdo->prepare("INSERT INTO users (username, email, password_hash, first_name, last_name) VALUES (?, ?, ?, ?, ?)");
-try {
-    $stmt->execute([$username, $email, $password, $first, $last]);
-    echo json_encode(["status" => "success"]);
-} catch (PDOException $e) {
-    echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $first = $_POST["first"] ?? '';
+    $last = $_POST["last"] ?? '';
+    $username = $_POST["username"] ?? '';
+    $email = $_POST["email"] ?? '';
+    $password = $_POST["password"] ?? '';
+
+    if (!$username || !$email || !$password) {
+        echo "Missing required fields.";
+        exit;
+    }
+
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    try {
+        $stmt = $pdo->prepare("
+            INSERT INTO users (username, email, password_hash, first_name, last_name) 
+            VALUES (:username, :email, :password_hash, :first_name, :last_name)
+        ");
+        $stmt->execute([
+            "username" => $username,
+            "email" => $email,
+            "password_hash" => $hashedPassword,
+            "first_name" => $first,
+            "last_name" => $last
+        ]);
+
+        echo "success";
+    } catch (Exception $e) {
+        if ($e->getCode() == 23000) {
+            echo "Username or email already exists.";
+        } else {
+            echo "Signup failed: " . $e->getMessage();
+        }
+    }
+} else {
+    echo "No POST received.";
 }
-?>

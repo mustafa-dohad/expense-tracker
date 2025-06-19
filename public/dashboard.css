@@ -1,0 +1,241 @@
+/* ==========================================================
+  COLOR SCHEME
+========================================================== */
+:root {
+  --primary: #27374D;
+  --secondary: #526D82;
+  --accent: #9DB2BF;
+  --bg-light: #DDE6ED;
+  --card-radius: 16px;
+  --card-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
+  --text-dark: #27374D;
+}
+
+/* ==========================================================
+  GENERAL BASE STYLES
+========================================================== */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  display: flex;
+}
+h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 12px;
+}
+.card {
+  background-color: #fff;
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  padding: 20px;
+}
+.transactions-list,
+.currency-list,
+#top-expenses-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.transactions-list li,
+.currency-list li,
+#top-expenses-list li {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+.account-card {
+  background-color: var(--accent);
+  padding: 10px;
+  border-radius: 12px;
+  color: #fff;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ==========================================================
+  SIDE NAVIGATION
+========================================================== */
+.side-nav {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 80px;
+  height: 100vh;
+  background-color: var(--primary);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.nav-icon {
+  font-size: 1.5rem;
+  padding: 12px;
+  color: var(--bg-light);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.nav-icon:hover {
+  color: var(--accent);
+}
+
+/* ==========================================================
+  MAIN DASHBOARD
+========================================================== */
+.dashboard {
+  flex: 1;
+  margin-left: 80px;
+  padding: 30px;
+  display: grid;
+  grid-gap: 30px;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+}
+
+/* ==========================================================
+  BUTTONS
+========================================================== */
+#add-transaction-desktop,
+#theme-button {
+  position: fixed;
+  font-size: 2rem;
+  padding: 18px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+}
+#add-transaction-desktop {
+  bottom: 30px;
+  right: 30px;
+  background-color: var(--primary);
+  color: #fff;
+}
+#theme-button {
+  top: 20px;
+  right: 20px;
+}
+
+/* ==========================================================
+  BOTTOM NAVIGATION (MOBILE)
+========================================================== */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: none;
+  justify-content: space-around;
+  background-color: var(--primary);
+  padding: 12px;
+}
+.bottom-nav .nav-icon {
+  font-size: 1.5rem;
+  color: var(--bg-light);
+}
+.fab {
+  font-size: 2rem;
+}
+
+/* ==========================================================
+  MODAL FORM
+========================================================== */
+.add-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(39, 55, 77, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+.hidden {
+  display: none;
+}
+.add-form {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: var(--card-radius);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 80vw;
+  max-width: 600px;
+}
+.add-form input,
+.add-form select,
+.add-form textarea {
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+}
+.new-label-box {
+  display: flex;
+  gap: 8px;
+}
+.new-label-box input {
+  flex: 1;
+}
+.new-label-box button {
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  background-color: var(--primary);
+  color: #fff;
+}
+.form-buttons {
+  display: flex;
+  justify-content: space-around;
+}
+.form-buttons button {
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.form-buttons button[type="submit"] {
+  background-color: var(--primary);
+  color: #fff;
+}
+.form-buttons button[type="button"] {
+  background-color: #ccc;
+}
+
+/* ==========================================================
+  DARK MODE
+========================================================== */
+body.dark {
+  background-color: #1f2937;
+  color: #d1d5db;
+}
+body.dark .card {
+  background-color: #374151;
+  color: #f9fafb;
+}
+body.dark .side-nav,
+body.dark .bottom-nav {
+  background-color: #111827;
+}
+
+/* ==========================================================
+  RESPONSIVE RULES
+========================================================== */
+@media (max-width: 768px) {
+  .side-nav {
+    display: none;
+  }
+  .dashboard {
+    margin-left: 0;
+    padding: 20px;
+    grid-gap: 20px;
+  }
+  .bottom-nav {
+    display: flex;
+  }
+}
