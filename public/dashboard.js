@@ -1,144 +1,171 @@
-// Elements
+// ===========================
+// ELEMENT SELECTION
+// ===========================
+const addOverlay = document.getElementById("add-overlay");
+const transactionForm = document.getElementById("transaction-form");
+const cancelButton = document.getElementById("cancel-transaction");
 const addButton = document.getElementById("add-transaction");
 const addButtonDesktop = document.getElementById("add-transaction-desktop");
 const themeButton = document.getElementById("theme-button");
-const addOverlay = document.getElementById("add-overlay");
-const cancelButton = document.getElementById("cancel-transaction");
-const transactionForm = document.querySelector(".add-form");
 
-// MODAL TOGGLE
+const accountList = document.getElementById("account-list");
+const transactionList = document.getElementById("transactions-list");
+const topExpensesList = document.getElementById("top-expenses-list");
+const currencyList = document.getElementById("currency-list");
+const highestCategoryDisplay = document.getElementById("highest-category");
+
+// ===========================
+// MODAL CONTROLS
+// ===========================
 addButton?.addEventListener("click", () =>
   addOverlay.classList.remove("hidden")
 );
 addButtonDesktop?.addEventListener("click", () =>
   addOverlay.classList.remove("hidden")
 );
-cancelButton?.addEventListener("click", (e) => {
-  e.preventDefault();
-  addOverlay.classList.add("hidden");
-});
 
-// DARK MODE TOGGLE
-themeButton?.addEventListener("click", () => {
-  document.body.classList.toggle("dark");
-});
+// ✅ New Addition: Trigger Modal for Mobile FAB
+const mobileAddButton = document.querySelector('.bottom-nav .fab');
+mobileAddButton?.addEventListener("click", () =>
+  addOverlay.classList.remove("hidden")
+);
 
-// NAV BUTTONS
-document.querySelectorAll(".nav-icon").forEach((btn) => {
-  btn.addEventListener("click", async (e) => {
-    const action = e.currentTarget.dataset.action;
-    if (action === "logout") {
-      window.location.href = "../backend/logout.php";
-    } else if (action === "transactions") {
-      window.location.href = "transactions.html";
-    } else {
-      alert(`${action} clicked!`);
-    }
-  });
-});
-
-// FORM SUBMISSION
-transactionForm?.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const formData = new FormData(transactionForm);
-  try {
-    const res = await fetch("../backend/add_transactions.php", {
-      method: "POST",
-      body: formData,
-    });
-    const result = await res.json();
-    alert(result.message);
-    if (result.status === "success") {
-      addOverlay.classList.add("hidden");
-      transactionForm.reset();
-      reloadAllData();
-    }
-  } catch (err) {
-    alert("Error submitting transaction");
-    console.error(err);
+cancelButton?.addEventListener("click", () =>
+  addOverlay.classList.add("hidden")
+);
+window.addEventListener("click", (e) => {
+  if (e.target === addOverlay) {
+    addOverlay.classList.add("hidden");
   }
 });
 
-// NEW LABEL
-const addLabelButton = document.getElementById("add-label-button");
-const newLabelInput = document.getElementById("new-label-input");
-addLabelButton?.addEventListener("click", async () => {
-  const labelName = newLabelInput.value.trim();
-  if (!labelName) return;
+// ===========================
+// FORM SUBMISSION
+// ===========================
+transactionForm?.addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-  const res = await fetch("../backend/add_label.php", {
+  // ✅ Validate that at least one label is selected
+  const selectedLabel = transactionForm.querySelector('select[name="label_id"]').value;
+  const newLabel = transactionForm.querySelector('input[name="new_label"]').value.trim();
+
+  if (!selectedLabel && !newLabel) {
+    alert("Please select an existing label or add a new one.");
+    return;
+  }
+
+  const formData = new FormData(transactionForm);
+  const res = await fetch("../backend/add_transaction.php", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name: labelName }),
+    body: formData,
   });
   const result = await res.json();
   alert(result.message);
   if (result.status === "success") {
-    newLabelInput.value = "";
-    loadLabels();
+    addOverlay.classList.add("hidden");
+    transactionForm.reset();
+    reloadAllData();
   }
 });
 
-// LOADERS
+// ===========================
+// LOAD ACCOUNTS
+// ===========================
+
 async function loadAccounts() {
-  const res = await fetch("../backend/get_accounts.php");
+  const res = await fetch(`../backend/get_accounts.php?t=${Date.now()}`, {
+    cache: "no-cache"
+  });
   const data = await res.json();
-  const container = document.getElementById("account-list");
-  const select = transactionForm.querySelector("select[name='account_id']");
-  container.innerHTML = "";
-  select.innerHTML = "<option value=''>Select Account</option>";
+
+  accountList.innerHTML = "";  
+  const accountSelect = transactionForm.querySelector('select[name="account_id"]');
+  accountSelect.innerHTML = "<option value=''>Select Account</option>";
+
   data.forEach((acc) => {
     const div = document.createElement("div");
     div.className = "account-card";
-    div.innerHTML = `<span>${acc.name}</span><strong>₨ ${acc.balance}</strong>`;
-    container.appendChild(div);
+    const balance = parseFloat(acc.balance);
+    div.innerHTML = `<span>${acc.name}</span><strong style="color:${balance < 0 ? 'red' : 'inherit'}">₨ ${balance.toFixed(2)}</strong>`;
+    accountList.appendChild(div);
+
     const option = document.createElement("option");
     option.value = acc.id;
     option.textContent = acc.name;
-    select.appendChild(option);
+    accountSelect.appendChild(option);
   });
 }
 
+
+// ===========================
+// LOAD TRANSACTIONS
+// ===========================
 async function loadTransactions() {
-  const res = await fetch("../backend/get_transactions.php");
-  const data = await res.json();
-  const list = document.getElementById("transactions-list");
-  list.innerHTML = "";
-  data.slice(0, 10).forEach((tx) => {
-    const li = document.createElement("li");
-    li.innerHTML = `<span>${tx.label}</span><span>₨ ${tx.amount} • ${tx.account}</span>`;
-    list.appendChild(li);
-  });
+  try {
+    const res = await fetch("../backend/get_transactions.php");
+    const data = await res.json();
+    transactionList.innerHTML = "";  
+
+    // Only show the first 6 transactions
+    const displayTransactions = data.slice(0, 5);
+
+    displayTransactions.forEach((tx) => {
+      const color =
+        tx.transaction_type === "expense" ? "#ff6b6b" :
+        tx.transaction_type === "income"  ? "#1dd1a1" :
+        "#54a0ff";
+
+      const labelsText = Array.isArray(tx.labels) && tx.labels.length > 0
+        ? tx.labels.join(", ") : (tx.labels || "N/A");
+
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <div style="color:${color}; font-weight:600;">
+           ${tx.category_name || "No Category"} — Rs. ${parseFloat(tx.amount).toFixed(2)}
+        </div>
+        <div style="font-size:0.9rem; color:#555;">
+           ${tx.transaction_date} ${tx.transaction_time}<br/>
+           Labels: ${labelsText}<br/>
+           Payee: ${tx.payee_name || "N/A"}
+        </div>
+        <hr style="border:none; border-bottom:1px solid #ccc; margin:8px 0;" />
+      `;
+      transactionList.appendChild(li);
+    });
+
+    // Append "Show More" link if more than 6 transactions
+    if (data.length > 5) {
+      const showMoreLi = document.createElement("li");
+      showMoreLi.innerHTML = `
+        <a href="transactions.html" style="display:block;text-align:center;color:#007BFF;text-decoration:none;margin:12px 0;">
+            Show More
+        </a>`;
+      transactionList.appendChild(showMoreLi);
+    }
+
+  } catch (error) {
+    console.error("Error loading transactions:", error);
+  }
 }
 
+
+// ===========================
+// LOAD CURRENCY RATES
+// ===========================
 async function loadCurrencyRates() {
   const res = await fetch("../backend/exchange_rates.php");
   const data = await res.json();
-  const list = document.getElementById("currency-list");
-  list.innerHTML = "";
+  currencyList.innerHTML = "";  
   for (const [currency, rate] of Object.entries(data)) {
     const li = document.createElement("li");
-    li.innerHTML = `${currency} → PKR: <strong>₨ ${rate}</strong>`;
-    list.appendChild(li);
+    li.innerHTML = `<span>${currency}</span> → <strong>₨ ${rate}</strong>`;
+    currencyList.appendChild(li);
   }
 }
 
-async function loadTopExpenses() {
-  const res = await fetch("../backend/top_expenses.php");
-  if (!res.ok) {
-    console.error("Error loading top expenses:", res.statusText);
-    return;
-  }
-  const data = await res.json();
-  const list = document.getElementById("top-expenses-list");
-  list.innerHTML = "";
-  data.forEach((exp) => {
-    const li = document.createElement("li");
-    li.innerHTML = `<span>${exp.label}</span><span>₨ ${exp.amount}</span>`;
-    list.appendChild(li);
-  });
-}
-
+// ===========================
+// LOAD CHARTS
+// ===========================
 async function loadExpenseChart() {
   const res = await fetch("../backend/expense_stats.php");
   const data = await res.json();
@@ -146,19 +173,8 @@ async function loadExpenseChart() {
     type: "pie",
     data: {
       labels: data.labels,
-      datasets: [
-        {
-          data: data.values,
-          backgroundColor: [
-            "#27374D",
-            "#526D82",
-            "#9DB2BF",
-            "#DDE6ED",
-            "#874F41",
-          ],
-        },
-      ],
-    },
+      datasets: [{ data: data.values, backgroundColor: ["#124e66", "#0fa4af", "#e64833", "#90aead", "#874F41"] }]
+    }
   });
 }
 
@@ -169,18 +185,58 @@ async function loadMonthlyChart() {
     type: "bar",
     data: {
       labels: data.labels,
-      datasets: [
-        {
-          label: "Monthly Expenses",
-          data: data.values,
-          backgroundColor: "#526D82",
-        },
-      ],
+      datasets: [{ label: "Monthly Expenses", data: data.values, backgroundColor: "#0fa4af" }]
     },
     options: { scales: { y: { beginAtZero: true } } },
   });
 }
 
+// ===========================
+// LOAD TOP EXPENSES
+// ===========================
+async function loadTopExpenses() {
+  try {
+    const res = await fetch("../backend/top_expenses.php");
+    const data = await res.json();
+    topExpensesList.innerHTML = "";  
+    highestCategoryDisplay.innerHTML = `
+      Highest Category: ${data.highest_category_name || "N/A"} — Rs. ${parseFloat(data.highest_category_amount || 0).toFixed(2)}
+    `;
+
+    if (Array.isArray(data.top_expenses) && data.top_expenses.length > 0) {
+      data.top_expenses.forEach((exp) => {
+        const li = document.createElement("li");
+        li.innerHTML = `${exp.category_name || "Other"} — Rs. ${parseFloat(exp.total_amount).toFixed(2)}`;
+        topExpensesList.appendChild(li);
+      });
+    } else {
+      topExpensesList.innerHTML = "<li>No data available</li>";
+    }
+  } catch (error) {
+    console.error("Error loading top expenses:", error);
+    topExpensesList.innerHTML = "<li>Error loading data</li>";
+  }
+}
+
+// ===========================
+// LOAD CATEGORIES
+// ===========================
+async function loadCategories() {
+  const res = await fetch("../backend/get_categories.php");
+  const data = await res.json();
+  const select = transactionForm.querySelector("select[name='category_id']");
+  select.innerHTML = "<option value=''>Select Category</option>";
+  data.forEach((cat) => {
+    const option = document.createElement("option");
+    option.value = cat.id;
+    option.textContent = cat.name;
+    select.appendChild(option);
+  });
+}
+
+// ===========================
+// LOAD LABELS
+// ===========================
 async function loadLabels() {
   const res = await fetch("../backend/get_labels.php");
   const data = await res.json();
@@ -194,16 +250,57 @@ async function loadLabels() {
   });
 }
 
-// RELOAD ALL
-async function reloadAllData() {
-  await loadAccounts();
-  await loadTransactions();
-  await loadCurrencyRates();
-  await loadTopExpenses();
-  await loadExpenseChart();
-  await loadMonthlyChart();
-  await loadLabels();
+// ===========================
+// INITIAL LOAD
+// ===========================
+function reloadAllData() {
+  loadAccounts();
+  loadTransactions();
+  loadCurrencyRates();
+  loadExpenseChart();
+  loadMonthlyChart();
+  loadTopExpenses();
+  loadCategories();
+  loadLabels();
 }
-
-// INIT
 reloadAllData();
+
+// ===========================
+// DARK MODE TOGGLE
+// ===========================
+if (localStorage.getItem("theme") === "dark") {
+  document.body.classList.add("dark");
+  themeButton.textContent = "☀️";
+}
+themeButton?.addEventListener("click", () => {
+  const isDark = document.body.classList.toggle("dark");
+  themeButton.textContent = isDark ? "☀️" : "🌙";
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+});
+
+
+// ===========================
+// NAVIGATION BUTTON ACTIONS
+// ===========================
+const navButtons = {
+  "🏠": "dashboard.html",
+  "👤": "profile.html",
+  "📋": "transactions.html",
+  "🚪": "../backend/logout.php"
+};
+document.querySelectorAll('.side-nav .nav-icon, .bottom-nav .nav-icon').forEach(button => {
+  const icon = button.textContent.trim();
+  if (navButtons[icon]) {
+    button.addEventListener('click', () => {
+      window.location.href = navButtons[icon];
+    });
+  }
+});
+transactionForm?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const formData = new FormData(transactionForm);
+  for (let [key, value] of formData.entries()) {
+    console.log(key, value);
+  }
+  // This will show you exactly what is being submitted.
+});

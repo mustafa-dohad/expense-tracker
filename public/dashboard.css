@@ -2,13 +2,13 @@
   COLOR SCHEME
 ========================================================== */
 :root {
-  --primary: #27374D;
-  --secondary: #526D82;
-  --accent: #9DB2BF;
-  --bg-light: #DDE6ED;
+  --primary: #27374d;
+  --secondary: #526d82;
+  --accent: #9db2bf;
+  --bg-light: #dde6ed;
   --card-radius: 16px;
   --card-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
-  --text-dark: #27374D;
+  --text-dark: #27374d;
 }
 
 /* ==========================================================
@@ -67,7 +67,14 @@ h3 {
   background-color: var(--primary);
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-between;
+}
+.nav-icons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 0;
+  gap: 25px;
 }
 .nav-icon {
   font-size: 1.5rem;
@@ -76,8 +83,26 @@ h3 {
   background: none;
   border: none;
   cursor: pointer;
+  text-align: center;
 }
 .nav-icon:hover {
+  color: var(--accent);
+}
+.nav-footer {
+  display: flex;
+  justify-content: center;
+  padding: 30px 0;
+}
+.nav-footer .nav-icon {
+  font-size: 1.5rem;
+  padding: 12px;
+  color: var(--bg-light);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+}
+.nav-footer .nav-icon:hover {
   color: var(--accent);
 }
 
@@ -94,26 +119,21 @@ h3 {
 }
 
 /* ==========================================================
-  BUTTONS
+  FLOATING + BUTTON (DESKTOP)
 ========================================================== */
-#add-transaction-desktop,
-#theme-button {
+#add-transaction-desktop {
   position: fixed;
+  bottom: 30px;
+  right: 30px;
   font-size: 2rem;
   padding: 18px;
   border-radius: 50%;
   border: none;
   cursor: pointer;
-}
-#add-transaction-desktop {
-  bottom: 30px;
-  right: 30px;
   background-color: var(--primary);
   color: #fff;
-}
-#theme-button {
-  top: 20px;
-  right: 20px;
+  box-shadow: var(--card-shadow);
+  z-index: 1000;
 }
 
 /* ==========================================================
@@ -122,12 +142,13 @@ h3 {
 .bottom-nav {
   position: fixed;
   bottom: 0;
-  left: 0;
-  right: 0;
-  display: none;
+  left: 10%;
+  right: 10%;
+  display: flex;
   justify-content: space-around;
   background-color: var(--primary);
   padding: 12px;
+  border-radius: 30px;
 }
 .bottom-nav .nav-icon {
   font-size: 1.5rem;
@@ -138,7 +159,7 @@ h3 {
 }
 
 /* ==========================================================
-  MODAL FORM
+  MODAL FORM STYLES (FINAL ADJUSTMENT)
 ========================================================== */
 .add-overlay {
   position: fixed;
@@ -150,59 +171,104 @@ h3 {
   align-items: center;
   height: 100vh;
   width: 100vw;
+  z-index: 1001;
 }
+
 .hidden {
   display: none;
 }
+
 .add-form {
   background-color: #fff;
-  padding: 30px;
+  padding: 25px;
   border-radius: var(--card-radius);
   display: flex;
   flex-direction: column;
   gap: 15px;
-  width: 80vw;
+  width: 60vw;
   max-width: 600px;
 }
+
 .add-form input,
 .add-form select,
 .add-form textarea {
-  padding: 12px;
   font-size: 1rem;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-}
-.new-label-box {
-  display: flex;
-  gap: 8px;
-}
-.new-label-box input {
-  flex: 1;
-}
-.new-label-box button {
   padding: 12px;
-  font-size: 1rem;
   border-radius: 12px;
   border: none;
-  cursor: pointer;
+  border-bottom: 1px solid #ccc;
+  outline: none;
+  background-color: #f9fafb;
+  width: 100%;
+}
+
+.add-form input:focus,
+.add-form select:focus,
+.add-form textarea:focus {
+  border-bottom: 2px solid var(--primary);
+}
+
+.add-form .line-separator {
+  border-bottom: 1px solid #e5e5e5;
+  margin: 12px 0;
+}
+
+.add-form .new-label-box,
+.add-form .payee-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.add-form .new-label-box select {
+  flex: 1;
+}
+
+.add-form .new-label-box input {
+  flex: 1;
+}
+
+.add-form .new-label-box button {
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  border-radius: 12px;
+  border: none;
   background-color: var(--primary);
   color: #fff;
+  cursor: pointer;
 }
+
+.add-form .new-label-box button:hover {
+  opacity: 0.9;
+}
+
+.add-form .payee-box input {
+  flex: 1;
+}
+
 .form-buttons {
   display: flex;
   justify-content: space-around;
+  margin-top: 15px;
 }
+
 .form-buttons button {
-  padding: 12px 20px;
+  padding: 12px 25px;
+  font-size: 1rem;
   border-radius: 12px;
   border: none;
-  font-size: 1rem;
   cursor: pointer;
 }
+
 .form-buttons button[type="submit"] {
   background-color: var(--primary);
   color: #fff;
 }
+
+.form-buttons button[type="submit"]:hover {
+  opacity: 0.9;
+}
+
 .form-buttons button[type="button"] {
   background-color: #ccc;
 }
@@ -226,6 +292,12 @@ body.dark .bottom-nav {
 /* ==========================================================
   RESPONSIVE RULES
 ========================================================== */
+@media (min-width: 769px) {
+  .bottom-nav {
+    display: none !important;
+  }
+}
+
 @media (max-width: 768px) {
   .side-nav {
     display: none;
@@ -235,7 +307,26 @@ body.dark .bottom-nav {
     padding: 20px;
     grid-gap: 20px;
   }
-  .bottom-nav {
-    display: flex;
+  #add-transaction-desktop {
+    display: none !important;
+  }
+   .add-form {
+    width: 80vw;
+    max-width: none;
+    padding: 20px;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  .add-form .new-label-box,
+  .add-form .payee-box {
+    flex-direction: row;
+    gap: 12px;
+  }
+
+  .add-form .new-label-box select,
+  .add-form .new-label-box input,
+  .add-form .payee-box input {
+    flex: 1;
   }
 }

@@ -10,10 +10,10 @@ if (savedTheme === "light") {
   toggleBtn.textContent = "🌙";
 }
 
-toggleBtn.addEventListener("click", () => {
-  const isLight = document.body.classList.toggle("light");
-  toggleBtn.textContent = isLight ? "☀️" : "🌙";
-  localStorage.setItem("theme", isLight ? "light" : "dark");
+themeButton?.addEventListener("click", () => {
+  const isDark = document.body.classList.toggle("dark");
+  themeButton.textContent = isDark ? "☀️" : "🌙";
+  localStorage.setItem("theme", isDark ? "dark" : "light");
 });
 
 // === Tab Switch Logic ===

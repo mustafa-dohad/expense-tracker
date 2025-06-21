@@ -11,7 +11,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION["user_id"];
 
 try {
-    $stmt = $pdo->prepare("SELECT name, current_balance AS balance FROM accounts WHERE user_id = :user_id AND is_active = 1 ORDER BY name ASC");
+    $stmt = $pdo->prepare("SELECT id, name, current_balance AS balance FROM accounts WHERE user_id = :user_id AND is_active = 1 ORDER BY name ASC");
     $stmt->execute(["user_id" => $user_id]);
     $accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode($accounts);
