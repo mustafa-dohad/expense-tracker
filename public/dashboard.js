@@ -1,3 +1,6 @@
+let expenseChartInstance = null;
+let monthlyChartInstance = null;
+
 // ===========================
 // ELEMENT SELECTION
 // ===========================
@@ -98,22 +101,29 @@ async function loadAccounts() {
 
 
 // ===========================
-// LOAD TRANSACTIONS
+// LOAD TRANSACTIONS (ONLY 5)
 // ===========================
 async function loadTransactions() {
   try {
     const res = await fetch("../backend/get_transactions.php");
     const data = await res.json();
-    transactionList.innerHTML = "";  
 
-    // Only show the first 6 transactions
+    transactionList.innerHTML = ""; 
+
+    // Always limit to the first 5 transactions
     const displayTransactions = data.slice(0, 5);
 
     displayTransactions.forEach((tx) => {
+      const isDark = document.body.classList.contains("dark");
+
+      // Choose color based on transaction type and theme
       const color =
-        tx.transaction_type === "expense" ? "#ff6b6b" :
-        tx.transaction_type === "income"  ? "#1dd1a1" :
-        "#54a0ff";
+        tx.transaction_type === "expense"
+          ? (isDark ? "#ff8787" : "#ff6b6b") // Expense
+          : tx.transaction_type === "income"
+            ? (isDark ? "#64ffda" : "#1dd1a1") // Income
+            : "#54a0ff"; // Transfer
+      const textColor = isDark ? "#f9fafb" : "#555"; // Details text color
 
       const labelsText = Array.isArray(tx.labels) && tx.labels.length > 0
         ? tx.labels.join(", ") : (tx.labels || "N/A");
@@ -123,21 +133,22 @@ async function loadTransactions() {
         <div style="color:${color}; font-weight:600;">
            ${tx.category_name || "No Category"} — Rs. ${parseFloat(tx.amount).toFixed(2)}
         </div>
-        <div style="font-size:0.9rem; color:#555;">
+        <div style="font-size:0.9rem; color:${textColor};">
            ${tx.transaction_date} ${tx.transaction_time}<br/>
            Labels: ${labelsText}<br/>
            Payee: ${tx.payee_name || "N/A"}
         </div>
-        <hr style="border:none; border-bottom:1px solid #ccc; margin:8px 0;" />
+        <hr style="border:none; border-bottom:1px solid ${isDark ? "#555" : "#ccc"}; margin:8px 0;" />
       `;
       transactionList.appendChild(li);
     });
 
-    // Append "Show More" link if more than 6 transactions
+    // Append "Show More" link if more than 5 transactions
     if (data.length > 5) {
       const showMoreLi = document.createElement("li");
       showMoreLi.innerHTML = `
-        <a href="transactions.html" style="display:block;text-align:center;color:#007BFF;text-decoration:none;margin:12px 0;">
+        <a href="transactions.html" 
+           style="display:block;text-align:center;color:#007BFF;text-decoration:none;margin:12px 0;">
             Show More
         </a>`;
       transactionList.appendChild(showMoreLi);
@@ -169,11 +180,30 @@ async function loadCurrencyRates() {
 async function loadExpenseChart() {
   const res = await fetch("../backend/expense_stats.php");
   const data = await res.json();
-  new Chart(document.getElementById("expenseChart"), {
+  const isDark = document.body.classList.contains("dark");
+
+  // Destroy old chart if it exists
+  if (expenseChartInstance) expenseChartInstance.destroy();
+
+  expenseChartInstance = new Chart(document.getElementById("expenseChart"), {
     type: "pie",
     data: {
       labels: data.labels,
-      datasets: [{ data: data.values, backgroundColor: ["#124e66", "#0fa4af", "#e64833", "#90aead", "#874F41"] }]
+      datasets: [{
+        data: data.values,
+        backgroundColor: isDark 
+           ? ["#26c3a1", "#ffba08", "#ff4d6d", "#3a86ff", "#8338ec", "#ff9100", "#06d6a0", "#ffdd00", "#f72585", "#4cc9f0"]
+           : ["#124e66", "#0fa4af", "#e64833", "#90aead", "#874F41", "#f4a261", "#2a9d8f", "#f94144", "#577590", "#ffba08"]
+      }]
+    },
+    options: {
+      plugins: {
+        legend: {
+          labels: {
+            color: isDark ? "#d1d5db" : "#000"
+          }
+        }
+      }
     }
   });
 }
@@ -181,15 +211,47 @@ async function loadExpenseChart() {
 async function loadMonthlyChart() {
   const res = await fetch("../backend/monthly_stats.php");
   const data = await res.json();
-  new Chart(document.getElementById("monthlyChart"), {
+  const isDark = document.body.classList.contains("dark");
+
+  // Destroy old chart if it exists
+  if (monthlyChartInstance) monthlyChartInstance.destroy();
+
+  monthlyChartInstance = new Chart(document.getElementById("monthlyChart"), {
     type: "bar",
     data: {
       labels: data.labels,
-      datasets: [{ label: "Monthly Expenses", data: data.values, backgroundColor: "#0fa4af" }]
+      datasets: [{
+        label: "Monthly Expenses",
+        data: data.values,
+        backgroundColor: isDark ? "#26c3a1" : "#0fa4af"
+      }]
     },
-    options: { scales: { y: { beginAtZero: true } } },
+    options: {
+      scales: {
+        x: {
+          ticks: {
+            color: isDark ? "#d1d5db" : "#000"
+          }
+        },
+        y: {
+          beginAtZero: true,
+          ticks: {
+            color: isDark ? "#d1d5db" : "#000"
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          labels: {
+            color: isDark ? "#d1d5db" : "#000"
+          }
+        }
+      }
+    }
   });
 }
+
+
 
 // ===========================
 // LOAD TOP EXPENSES
@@ -272,11 +334,17 @@ if (localStorage.getItem("theme") === "dark") {
   document.body.classList.add("dark");
   themeButton.textContent = "☀️";
 }
-themeButton?.addEventListener("click", () => {
+themeButton?.addEventListener("click", async () => {
   const isDark = document.body.classList.toggle("dark");
   themeButton.textContent = isDark ? "☀️" : "🌙";
   localStorage.setItem("theme", isDark ? "dark" : "light");
+
+  // ✅ IMPORTANT: Redraw charts
+  await loadTransactions();
+  await loadExpenseChart();
+  await loadMonthlyChart();
 });
+
 
 
 // ===========================

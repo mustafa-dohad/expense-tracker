@@ -1,13 +1,13 @@
 // === 🌙 / ☀️ Theme toggle with persistence ===
-const toggleBtn = document.getElementById("theme-button");
+const themeButton = document.getElementById("theme-button");
 
 const savedTheme = localStorage.getItem("theme");
-if (savedTheme === "light") {
-  document.body.classList.add("light");
-  toggleBtn.textContent = "☀️";
+if (savedTheme === "dark") {
+  document.body.classList.add("dark");
+  themeButton.textContent = "☀️";
 } else {
-  document.body.classList.remove("light");
-  toggleBtn.textContent = "🌙";
+  document.body.classList.remove("dark");
+  themeButton.textContent = "🌙";
 }
 
 themeButton?.addEventListener("click", () => {
@@ -15,6 +15,7 @@ themeButton?.addEventListener("click", () => {
   themeButton.textContent = isDark ? "☀️" : "🌙";
   localStorage.setItem("theme", isDark ? "dark" : "light");
 });
+
 
 // === Tab Switch Logic ===
 const loginTab = document.getElementById("login-tab");

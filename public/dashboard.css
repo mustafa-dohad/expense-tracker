@@ -9,6 +9,21 @@
   --card-radius: 16px;
   --card-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
   --text-dark: #27374d;
+
+  /* New Dark Mode Palette */
+  --clr-dark-a0: #000000;
+  --clr-light-a0: #ffffff;
+
+  --clr-primary-a0: #26c3a1;
+
+  --clr-surface-a0: #121212;
+  --clr-surface-a10: #282828;
+  --clr-surface-a20: #3f3f3f;
+  --clr-surface-a30: #575757;
+  --clr-surface-a40: #717171;
+
+  --clr-surface-tonal-a0: #19211f;
+
 }
 
 /* ==========================================================
@@ -136,12 +151,17 @@ h3 {
   z-index: 1000;
 }
 
+body.dark #add-transaction-desktop {
+  background-color: var(--clr-primary-a0);
+  color: var(--clr-light-a0);
+}
+
 /* ==========================================================
   BOTTOM NAVIGATION (MOBILE)
 ========================================================== */
 .bottom-nav {
   position: fixed;
-  bottom: 0;
+  bottom: 10px;
   left: 10%;
   right: 10%;
   display: flex;
@@ -173,11 +193,9 @@ h3 {
   width: 100vw;
   z-index: 1001;
 }
-
 .hidden {
   display: none;
 }
-
 .add-form {
   background-color: #fff;
   padding: 25px;
@@ -188,7 +206,6 @@ h3 {
   width: 60vw;
   max-width: 600px;
 }
-
 .add-form input,
 .add-form select,
 .add-form textarea {
@@ -201,33 +218,27 @@ h3 {
   background-color: #f9fafb;
   width: 100%;
 }
-
 .add-form input:focus,
 .add-form select:focus,
 .add-form textarea:focus {
   border-bottom: 2px solid var(--primary);
 }
-
 .add-form .line-separator {
   border-bottom: 1px solid #e5e5e5;
   margin: 12px 0;
 }
-
 .add-form .new-label-box,
 .add-form .payee-box {
   display: flex;
   align-items: center;
   gap: 12px;
 }
-
 .add-form .new-label-box select {
   flex: 1;
 }
-
 .add-form .new-label-box input {
   flex: 1;
 }
-
 .add-form .new-label-box button {
   font-size: 0.9rem;
   padding: 8px 16px;
@@ -237,21 +248,17 @@ h3 {
   color: #fff;
   cursor: pointer;
 }
-
 .add-form .new-label-box button:hover {
   opacity: 0.9;
 }
-
 .add-form .payee-box input {
   flex: 1;
 }
-
 .form-buttons {
   display: flex;
   justify-content: space-around;
   margin-top: 15px;
 }
-
 .form-buttons button {
   padding: 12px 25px;
   font-size: 1rem;
@@ -259,34 +266,56 @@ h3 {
   border: none;
   cursor: pointer;
 }
-
 .form-buttons button[type="submit"] {
   background-color: var(--primary);
   color: #fff;
 }
-
 .form-buttons button[type="submit"]:hover {
   opacity: 0.9;
 }
-
 .form-buttons button[type="button"] {
   background-color: #ccc;
 }
 
 /* ==========================================================
-  DARK MODE
+  DARK MODE STYLING
 ========================================================== */
 body.dark {
-  background-color: #1f2937;
-  color: #d1d5db;
+  background-color: var(--clr-surface-a0);
+  color: var(--clr-light-a0);
 }
 body.dark .card {
-  background-color: #374151;
-  color: #f9fafb;
+  background-color: var(--clr-surface-a10);
+  color: var(--clr-light-a0);
 }
 body.dark .side-nav,
 body.dark .bottom-nav {
-  background-color: #111827;
+  background-color: var(--clr-surface-a20);
+}
+body.dark .account-card {
+  background-color: var(--clr-surface-a30);
+  color: var(--clr-light-a0);
+}
+body.dark .transactions-list li,
+body.dark .currency-list li,
+body.dark #top-expenses-list li {
+  border-bottom: 1px solid var(--clr-surface-a40);
+}
+body.dark .add-form {
+  background-color: var(--clr-surface-a10);
+}
+body.dark .add-form input,
+body.dark .add-form select,
+body.dark .add-form textarea {
+  background-color: var(--clr-surface-a20);
+  color: var(--clr-light-a0);
+}
+body.dark .add-form .line-separator {
+  border-bottom: 1px solid var(--clr-surface-a40);
+}
+body.dark .nav-icon:hover,
+body.dark .nav-footer .nav-icon:hover {
+  color: var(--clr-primary-a0);
 }
 
 /* ==========================================================
@@ -305,25 +334,24 @@ body.dark .bottom-nav {
   .dashboard {
     margin-left: 0;
     padding: 20px;
+    padding-bottom: 100px;
     grid-gap: 20px;
   }
   #add-transaction-desktop {
     display: none !important;
   }
-   .add-form {
+  .add-form {
     width: 80vw;
     max-width: none;
     padding: 20px;
     max-height: 70vh;
     overflow-y: auto;
   }
-
   .add-form .new-label-box,
   .add-form .payee-box {
     flex-direction: row;
     gap: 12px;
   }
-
   .add-form .new-label-box select,
   .add-form .new-label-box input,
   .add-form .payee-box input {
