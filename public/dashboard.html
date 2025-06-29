@@ -1,21 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <title>Dashboard</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="stylesheet" href="dashboard.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
-  // Apply saved theme before page loads
-  (function() {
-    const theme = localStorage.getItem("theme");
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark");
-    }
-  })();
-</script>
+    // Apply saved theme before page loads
+    (function () {
+      const theme = localStorage.getItem("theme");
+      if (theme === "dark") {
+        document.documentElement.classList.add("dark");
+      }
+    })();
+  </script>
 </head>
 
 <body>
@@ -33,26 +32,39 @@
     </div>
   </nav>
 
+  <!-- Mobile Header -->
+  <header class="mobile-header">
+    <h2 class="mobile-title">Dashboard</h2>
+    <button id="theme-button-mobile" title="Toggle Dark Mode">🌙</button>
+  </header>
+
   <!-- Main Dashboard -->
   <main class="dashboard">
     <div class="card">
       <h3>Accounts</h3>
       <div id="account-list"></div>
     </div>
+
     <div class="card">
       <h3>Recent Transactions</h3>
       <ul id="transactions-list"></ul>
     </div>
+
     <div class="card">
-      <h3>Expense by Category</h3><canvas id="expenseChart"></canvas>
+      <h3>Expense by Category</h3>
+      <canvas id="expenseChart"></canvas>
     </div>
+
     <div class="card">
       <h3>Currency Rates</h3>
       <ul id="currency-list"></ul>
     </div>
+
     <div class="card">
-      <h3>Monthly Expenses</h3><canvas id="monthlyChart"></canvas>
+      <h3>Monthly Expenses</h3>
+      <canvas id="monthlyChart"></canvas>
     </div>
+
     <div class="card">
       <h3>Top Expenses</h3>
       <div id="highest-category"></div>
@@ -70,15 +82,18 @@
         <input class="amount-field" name="amount" placeholder="Amount (₨)" required />
 
         <div class="line-separator"></div>
+
         <select name="account_id">…</select>
         <select name="category_id">…</select>
 
         <div class="line-separator"></div>
+
         <div class="payee-box">
           <input type="text" name="payee_name" placeholder="Enter Payee Name" />
         </div>
 
         <div class="line-separator"></div>
+
         <div class="new-label-box">
           <select name="label_id">…</select>
           <input type="text" name="new_label" placeholder="Enter New Label Name" />
@@ -86,10 +101,12 @@
         </div>
 
         <div class="line-separator"></div>
+
         <input type="date" name="transaction_date" required />
         <input type="time" name="transaction_time" required />
 
         <div class="line-separator"></div>
+
         <select name="payment_method">
           <option value="cash">Cash</option>
           <option value="online">Online</option>
@@ -105,6 +122,7 @@
         </select>
 
         <div class="line-separator"></div>
+
         <textarea name="description" placeholder="Notes (optional)"></textarea>
 
         <div class="form-buttons">
@@ -112,8 +130,6 @@
           <button type="button" id="cancel-transaction">Cancel</button>
         </div>
       </form>
-
-
     </div>
   </div>
 
@@ -126,7 +142,7 @@
     <button class="nav-icon" title="Logout" data-action="logout">🚪</button>
   </nav>
 
+  <!-- Script -->
   <script src="dashboard.js"></script>
 </body>
-
 </html>

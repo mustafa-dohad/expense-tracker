@@ -13,7 +13,6 @@
   /* New Dark Mode Palette */
   --clr-dark-a0: #000000;
   --clr-light-a0: #ffffff;
-
   --clr-primary-a0: #26c3a1;
 
   --clr-surface-a0: #121212;
@@ -21,32 +20,52 @@
   --clr-surface-a20: #3f3f3f;
   --clr-surface-a30: #575757;
   --clr-surface-a40: #717171;
-
   --clr-surface-tonal-a0: #19211f;
-
 }
 
 /* ==========================================================
   GENERAL BASE STYLES
 ========================================================== */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   background-color: var(--bg-light);
   color: var(--text-dark);
-  display: flex;
 }
+
+@media (min-width: 769px) {
+  body {
+    display: flex;
+  }
+}
+
+input,
+button,
+select,
+textarea {
+  font-size: 16px;
+}
+
 h3 {
   font-size: 1.1rem;
   font-weight: 600;
   margin: 0 0 12px;
 }
+
 .card {
   background-color: #fff;
   border-radius: var(--card-radius);
   box-shadow: var(--card-shadow);
   padding: 20px;
 }
+
 .transactions-list,
 .currency-list,
 #top-expenses-list {
@@ -54,12 +73,14 @@ h3 {
   padding: 0;
   margin: 0;
 }
+
 .transactions-list li,
 .currency-list li,
 #top-expenses-list li {
   padding: 8px 0;
   border-bottom: 1px solid #eee;
 }
+
 .account-card {
   background-color: var(--accent);
   padding: 10px;
@@ -84,6 +105,7 @@ h3 {
   flex-direction: column;
   justify-content: space-between;
 }
+
 .nav-icons {
   display: flex;
   flex-direction: column;
@@ -91,6 +113,7 @@ h3 {
   padding: 30px 0;
   gap: 25px;
 }
+
 .nav-icon {
   font-size: 1.5rem;
   padding: 12px;
@@ -100,14 +123,17 @@ h3 {
   cursor: pointer;
   text-align: center;
 }
+
 .nav-icon:hover {
   color: var(--accent);
 }
+
 .nav-footer {
   display: flex;
   justify-content: center;
   padding: 30px 0;
 }
+
 .nav-footer .nav-icon {
   font-size: 1.5rem;
   padding: 12px;
@@ -117,6 +143,7 @@ h3 {
   cursor: pointer;
   text-align: center;
 }
+
 .nav-footer .nav-icon:hover {
   color: var(--accent);
 }
@@ -130,7 +157,13 @@ h3 {
   padding: 30px;
   display: grid;
   grid-gap: 30px;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+@media (min-width: 1024px) {
+  .dashboard {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 /* ==========================================================
@@ -170,16 +203,18 @@ body.dark #add-transaction-desktop {
   padding: 12px;
   border-radius: 30px;
 }
+
 .bottom-nav .nav-icon {
   font-size: 1.5rem;
   color: var(--bg-light);
 }
+
 .fab {
   font-size: 2rem;
 }
 
 /* ==========================================================
-  MODAL FORM STYLES (FINAL ADJUSTMENT)
+  MODAL FORM STYLES
 ========================================================== */
 .add-overlay {
   position: fixed;
@@ -193,9 +228,11 @@ body.dark #add-transaction-desktop {
   width: 100vw;
   z-index: 1001;
 }
+
 .hidden {
   display: none;
 }
+
 .add-form {
   background-color: #fff;
   padding: 25px;
@@ -206,6 +243,7 @@ body.dark #add-transaction-desktop {
   width: 60vw;
   max-width: 600px;
 }
+
 .add-form input,
 .add-form select,
 .add-form textarea {
@@ -218,27 +256,33 @@ body.dark #add-transaction-desktop {
   background-color: #f9fafb;
   width: 100%;
 }
+
 .add-form input:focus,
 .add-form select:focus,
 .add-form textarea:focus {
   border-bottom: 2px solid var(--primary);
 }
+
 .add-form .line-separator {
   border-bottom: 1px solid #e5e5e5;
   margin: 12px 0;
 }
+
 .add-form .new-label-box,
 .add-form .payee-box {
   display: flex;
   align-items: center;
   gap: 12px;
 }
+
 .add-form .new-label-box select {
   flex: 1;
 }
+
 .add-form .new-label-box input {
   flex: 1;
 }
+
 .add-form .new-label-box button {
   font-size: 0.9rem;
   padding: 8px 16px;
@@ -248,17 +292,21 @@ body.dark #add-transaction-desktop {
   color: #fff;
   cursor: pointer;
 }
+
 .add-form .new-label-box button:hover {
   opacity: 0.9;
 }
+
 .add-form .payee-box input {
   flex: 1;
 }
+
 .form-buttons {
   display: flex;
   justify-content: space-around;
   margin-top: 15px;
 }
+
 .form-buttons button {
   padding: 12px 25px;
   font-size: 1rem;
@@ -266,53 +314,64 @@ body.dark #add-transaction-desktop {
   border: none;
   cursor: pointer;
 }
+
 .form-buttons button[type="submit"] {
   background-color: var(--primary);
   color: #fff;
 }
+
 .form-buttons button[type="submit"]:hover {
   opacity: 0.9;
 }
+
 .form-buttons button[type="button"] {
   background-color: #ccc;
 }
 
 /* ==========================================================
-  DARK MODE STYLING
+  DARK MODE
 ========================================================== */
 body.dark {
   background-color: var(--clr-surface-a0);
   color: var(--clr-light-a0);
 }
+
 body.dark .card {
   background-color: var(--clr-surface-a10);
   color: var(--clr-light-a0);
 }
+
 body.dark .side-nav,
 body.dark .bottom-nav {
   background-color: var(--clr-surface-a20);
 }
+
 body.dark .account-card {
   background-color: var(--clr-surface-a30);
   color: var(--clr-light-a0);
 }
+
 body.dark .transactions-list li,
 body.dark .currency-list li,
 body.dark #top-expenses-list li {
   border-bottom: 1px solid var(--clr-surface-a40);
 }
+
 body.dark .add-form {
   background-color: var(--clr-surface-a10);
 }
+
 body.dark .add-form input,
 body.dark .add-form select,
 body.dark .add-form textarea {
   background-color: var(--clr-surface-a20);
   color: var(--clr-light-a0);
 }
+
 body.dark .add-form .line-separator {
   border-bottom: 1px solid var(--clr-surface-a40);
 }
+
 body.dark .nav-icon:hover,
 body.dark .nav-footer .nav-icon:hover {
   color: var(--clr-primary-a0);
@@ -331,15 +390,18 @@ body.dark .nav-footer .nav-icon:hover {
   .side-nav {
     display: none;
   }
+
   .dashboard {
     margin-left: 0;
     padding: 20px;
     padding-bottom: 100px;
     grid-gap: 20px;
   }
+
   #add-transaction-desktop {
     display: none !important;
   }
+
   .add-form {
     width: 80vw;
     max-width: none;
@@ -347,14 +409,70 @@ body.dark .nav-footer .nav-icon:hover {
     max-height: 70vh;
     overflow-y: auto;
   }
+
   .add-form .new-label-box,
   .add-form .payee-box {
     flex-direction: row;
     gap: 12px;
   }
+
   .add-form .new-label-box select,
   .add-form .new-label-box input,
   .add-form .payee-box input {
     flex: 1;
   }
+}
+
+/* ============================
+   MOBILE HEADER (SMALL SCREENS)
+============================ */
+.mobile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 20px;
+  background-color: var(--primary);
+  color: var(--bg-light);
+  font-family: 'Inter', sans-serif;
+}
+
+.mobile-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+@media (min-width: 769px) {
+  .mobile-header {
+    display: none;
+  }
+}
+
+body.dark .mobile-header {
+  background-color: var(--clr-surface-a20);
+  color: var(--clr-light-a0);
+}
+
+#theme-button-mobile {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: inherit;
+  cursor: pointer;
+}
+
+@keyframes rotate-in {
+  0% {
+    transform: rotate(0deg) scale(0.8);
+    opacity: 0.5;
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+    opacity: 1;
+  }
+}
+
+.theme-animated {
+  animation: rotate-in 0.8s ease;
 }

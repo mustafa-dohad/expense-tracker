@@ -1,23 +1,33 @@
-// === 🌙 / ☀️ Theme toggle with persistence ===
+// ===================================================
+// 🌙 / ☀️ THEME TOGGLE WITH PERSISTENCE
+// ===================================================
 const themeButton = document.getElementById("theme-button");
 
+// Apply saved theme on load
 const savedTheme = localStorage.getItem("theme");
-if (savedTheme === "dark") {
-  document.body.classList.add("dark");
+if (savedTheme === "light") {
+  document.body.classList.add("light");
   themeButton.textContent = "☀️";
 } else {
-  document.body.classList.remove("dark");
+  document.body.classList.remove("light"); // dark by default
   themeButton.textContent = "🌙";
 }
 
 themeButton?.addEventListener("click", () => {
-  const isDark = document.body.classList.toggle("dark");
-  themeButton.textContent = isDark ? "☀️" : "🌙";
-  localStorage.setItem("theme", isDark ? "dark" : "light");
+  themeButton.classList.add("spinning");
+
+  setTimeout(() => {
+    const isLight = document.body.classList.toggle("light");
+    themeButton.textContent = isLight ? "☀️" : "🌙";
+    localStorage.setItem("theme", isLight ? "light" : "dark");
+    themeButton.classList.remove("spinning");
+  }, 150);
 });
 
 
-// === Tab Switch Logic ===
+// ===================================================
+// 🔁 TAB SWITCH LOGIC
+// ===================================================
 const loginTab = document.getElementById("login-tab");
 const signupTab = document.getElementById("signup-tab");
 const loginForm = document.getElementById("login-form");
@@ -39,7 +49,10 @@ signupTab.onclick = () => {
   document.getElementById("message").textContent = "";
 };
 
-// === Login AJAX Submit ===
+
+// ===================================================
+// 🔐 LOGIN FORM AJAX SUBMISSION
+// ===================================================
 const loginBtn = document.getElementById("login-btn");
 const loginSpinner = document.getElementById("login-spinner");
 
@@ -73,7 +86,10 @@ loginForm.addEventListener("submit", async (e) => {
   loginBtn.disabled = false;
 });
 
-// === Signup AJAX Submit ===
+
+// ===================================================
+// 🆕 SIGNUP FORM AJAX SUBMISSION
+// ===================================================
 const signupBtn = document.getElementById("signup-btn");
 const signupSpinner = document.getElementById("signup-spinner");
 

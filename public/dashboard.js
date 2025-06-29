@@ -10,6 +10,7 @@ const cancelButton = document.getElementById("cancel-transaction");
 const addButton = document.getElementById("add-transaction");
 const addButtonDesktop = document.getElementById("add-transaction-desktop");
 const themeButton = document.getElementById("theme-button");
+const themeButtonMobile = document.getElementById("theme-button-mobile");
 
 const accountList = document.getElementById("account-list");
 const transactionList = document.getElementById("transactions-list");
@@ -48,7 +49,6 @@ window.addEventListener("click", (e) => {
 transactionForm?.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  // ✅ Validate that at least one label is selected
   const selectedLabel = transactionForm.querySelector('select[name="label_id"]').value;
   const newLabel = transactionForm.querySelector('input[name="new_label"]').value.trim();
 
@@ -64,6 +64,7 @@ transactionForm?.addEventListener("submit", async (e) => {
   });
   const result = await res.json();
   alert(result.message);
+
   if (result.status === "success") {
     addOverlay.classList.add("hidden");
     transactionForm.reset();
@@ -74,14 +75,11 @@ transactionForm?.addEventListener("submit", async (e) => {
 // ===========================
 // LOAD ACCOUNTS
 // ===========================
-
 async function loadAccounts() {
-  const res = await fetch(`../backend/get_accounts.php?t=${Date.now()}`, {
-    cache: "no-cache"
-  });
+  const res = await fetch(`../backend/get_accounts.php?t=${Date.now()}`, { cache: "no-cache" });
   const data = await res.json();
 
-  accountList.innerHTML = "";  
+  accountList.innerHTML = "";
   const accountSelect = transactionForm.querySelector('select[name="account_id"]');
   accountSelect.innerHTML = "<option value=''>Select Account</option>";
 
@@ -99,7 +97,6 @@ async function loadAccounts() {
   });
 }
 
-
 // ===========================
 // LOAD TRANSACTIONS (ONLY 5)
 // ===========================
@@ -108,23 +105,19 @@ async function loadTransactions() {
     const res = await fetch("../backend/get_transactions.php");
     const data = await res.json();
 
-    transactionList.innerHTML = ""; 
-
-    // Always limit to the first 5 transactions
+    transactionList.innerHTML = "";
     const displayTransactions = data.slice(0, 5);
 
     displayTransactions.forEach((tx) => {
       const isDark = document.body.classList.contains("dark");
 
-      // Choose color based on transaction type and theme
-      const color =
-        tx.transaction_type === "expense"
-          ? (isDark ? "#ff8787" : "#ff6b6b") // Expense
-          : tx.transaction_type === "income"
-            ? (isDark ? "#64ffda" : "#1dd1a1") // Income
-            : "#54a0ff"; // Transfer
-      const textColor = isDark ? "#f9fafb" : "#555"; // Details text color
+      const color = tx.transaction_type === "expense"
+        ? (isDark ? "#ff8787" : "#ff6b6b")
+        : tx.transaction_type === "income"
+          ? (isDark ? "#64ffda" : "#1dd1a1")
+          : "#54a0ff";
 
+      const textColor = isDark ? "#f9fafb" : "#555";
       const labelsText = Array.isArray(tx.labels) && tx.labels.length > 0
         ? tx.labels.join(", ") : (tx.labels || "N/A");
 
@@ -143,7 +136,6 @@ async function loadTransactions() {
       transactionList.appendChild(li);
     });
 
-    // Append "Show More" link if more than 5 transactions
     if (data.length > 5) {
       const showMoreLi = document.createElement("li");
       showMoreLi.innerHTML = `
@@ -159,14 +151,14 @@ async function loadTransactions() {
   }
 }
 
-
 // ===========================
 // LOAD CURRENCY RATES
 // ===========================
 async function loadCurrencyRates() {
   const res = await fetch("../backend/exchange_rates.php");
   const data = await res.json();
-  currencyList.innerHTML = "";  
+  currencyList.innerHTML = "";
+
   for (const [currency, rate] of Object.entries(data)) {
     const li = document.createElement("li");
     li.innerHTML = `<span>${currency}</span> → <strong>₨ ${rate}</strong>`;
@@ -175,14 +167,13 @@ async function loadCurrencyRates() {
 }
 
 // ===========================
-// LOAD CHARTS
+// LOAD EXPENSE CHART
 // ===========================
 async function loadExpenseChart() {
   const res = await fetch("../backend/expense_stats.php");
   const data = await res.json();
   const isDark = document.body.classList.contains("dark");
 
-  // Destroy old chart if it exists
   if (expenseChartInstance) expenseChartInstance.destroy();
 
   expenseChartInstance = new Chart(document.getElementById("expenseChart"), {
@@ -191,9 +182,9 @@ async function loadExpenseChart() {
       labels: data.labels,
       datasets: [{
         data: data.values,
-        backgroundColor: isDark 
-           ? ["#26c3a1", "#ffba08", "#ff4d6d", "#3a86ff", "#8338ec", "#ff9100", "#06d6a0", "#ffdd00", "#f72585", "#4cc9f0"]
-           : ["#124e66", "#0fa4af", "#e64833", "#90aead", "#874F41", "#f4a261", "#2a9d8f", "#f94144", "#577590", "#ffba08"]
+        backgroundColor: isDark
+          ? ["#26c3a1", "#ffba08", "#ff4d6d", "#3a86ff", "#8338ec", "#ff9100", "#06d6a0", "#ffdd00", "#f72585", "#4cc9f0"]
+          : ["#124e66", "#0fa4af", "#e64833", "#90aead", "#874F41", "#f4a261", "#2a9d8f", "#f94144", "#577590", "#ffba08"]
       }]
     },
     options: {
@@ -208,12 +199,14 @@ async function loadExpenseChart() {
   });
 }
 
+// ===========================
+// LOAD MONTHLY CHART
+// ===========================
 async function loadMonthlyChart() {
   const res = await fetch("../backend/monthly_stats.php");
   const data = await res.json();
   const isDark = document.body.classList.contains("dark");
 
-  // Destroy old chart if it exists
   if (monthlyChartInstance) monthlyChartInstance.destroy();
 
   monthlyChartInstance = new Chart(document.getElementById("monthlyChart"), {
@@ -228,30 +221,20 @@ async function loadMonthlyChart() {
     },
     options: {
       scales: {
-        x: {
-          ticks: {
-            color: isDark ? "#d1d5db" : "#000"
-          }
-        },
+        x: { ticks: { color: isDark ? "#d1d5db" : "#000" } },
         y: {
           beginAtZero: true,
-          ticks: {
-            color: isDark ? "#d1d5db" : "#000"
-          }
+          ticks: { color: isDark ? "#d1d5db" : "#000" }
         }
       },
       plugins: {
         legend: {
-          labels: {
-            color: isDark ? "#d1d5db" : "#000"
-          }
+          labels: { color: isDark ? "#d1d5db" : "#000" }
         }
       }
     }
   });
 }
-
-
 
 // ===========================
 // LOAD TOP EXPENSES
@@ -260,7 +243,8 @@ async function loadTopExpenses() {
   try {
     const res = await fetch("../backend/top_expenses.php");
     const data = await res.json();
-    topExpensesList.innerHTML = "";  
+
+    topExpensesList.innerHTML = "";
     highestCategoryDisplay.innerHTML = `
       Highest Category: ${data.highest_category_name || "N/A"} — Rs. ${parseFloat(data.highest_category_amount || 0).toFixed(2)}
     `;
@@ -328,24 +312,39 @@ function reloadAllData() {
 reloadAllData();
 
 // ===========================
-// DARK MODE TOGGLE
+// DARK MODE TOGGLE (DESKTOP + MOBILE)
 // ===========================
-if (localStorage.getItem("theme") === "dark") {
-  document.body.classList.add("dark");
-  themeButton.textContent = "☀️";
+function applyThemeIcon(isDark) {
+  const icon = isDark ? "☀️" : "🌙";
+  if (themeButton) themeButton.textContent = icon;
+  if (themeButtonMobile) themeButtonMobile.textContent = icon;
 }
-themeButton?.addEventListener("click", async () => {
+
+function toggleDarkMode() {
   const isDark = document.body.classList.toggle("dark");
-  themeButton.textContent = isDark ? "☀️" : "🌙";
   localStorage.setItem("theme", isDark ? "dark" : "light");
+  applyThemeIcon(isDark);
 
-  // ✅ IMPORTANT: Redraw charts
-  await loadTransactions();
-  await loadExpenseChart();
-  await loadMonthlyChart();
-});
+  [themeButton, themeButtonMobile].forEach(btn => {
+    if (btn) {
+      btn.classList.add("theme-animated");
+      setTimeout(() => btn.classList.remove("theme-animated"), 400);
+    }
+  });
 
+  loadTransactions();
+  loadExpenseChart();
+  loadMonthlyChart();
+}
 
+const initialTheme = localStorage.getItem("theme") === "dark";
+if (initialTheme) {
+  document.body.classList.add("dark");
+}
+applyThemeIcon(initialTheme);
+
+themeButton?.addEventListener("click", toggleDarkMode);
+themeButtonMobile?.addEventListener("click", toggleDarkMode);
 
 // ===========================
 // NAVIGATION BUTTON ACTIONS
@@ -356,6 +355,7 @@ const navButtons = {
   "📋": "transactions.html",
   "🚪": "../backend/logout.php"
 };
+
 document.querySelectorAll('.side-nav .nav-icon, .bottom-nav .nav-icon').forEach(button => {
   const icon = button.textContent.trim();
   if (navButtons[icon]) {
@@ -364,11 +364,14 @@ document.querySelectorAll('.side-nav .nav-icon, .bottom-nav .nav-icon').forEach(
     });
   }
 });
+
+// ===========================
+// DEBUGGING SUBMISSION
+// ===========================
 transactionForm?.addEventListener("submit", async (e) => {
   e.preventDefault();
   const formData = new FormData(transactionForm);
   for (let [key, value] of formData.entries()) {
     console.log(key, value);
   }
-  // This will show you exactly what is being submitted.
 });
