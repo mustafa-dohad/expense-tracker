@@ -1,44 +1,75 @@
 <?php
 require 'db.php';
 session_start();
+header('Content-Type: application/json');
 
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(["status" => "unauthorized"]);
     exit;
 }
 
-$data = json_decode(file_get_contents("php://input"), true);
-$transaction_id = $data['transaction_id'];
+if (!isset($_POST['transaction_id'])) {
+    echo json_encode(["status" => "missing_id"]);
+    exit;
+}
+
+$transaction_id = $_POST['transaction_id'];
 $user_id = $_SESSION['user_id'];
 
-$stmt = $pdo->prepare("UPDATE transactions SET
-    account_id = ?, category_id = ?, payee_id = ?, transfer_account_id = ?,
-    amount = ?, transaction_type = ?, payment_method = ?, description = ?,
-    notes = ?, transaction_date = ?, transaction_time = ?, location = ?,
-    reference_number = ?, status = ?
-WHERE id = ? AND user_id = ?");
-
 try {
+    $pdo->beginTransaction();
+
+    // ============ HANDLE PAYEE =============
+    $payee_id = null;
+    if (!empty($_POST['payee_name'])) {
+        // Try to find existing payee
+        $stmt = $pdo->prepare("SELECT id FROM payees WHERE name = ? AND user_id = ?");
+        $stmt->execute([$_POST['payee_name'], $user_id]);
+        $existing = $stmt->fetchColumn();
+
+        if ($existing) {
+            $payee_id = $existing;
+        } else {
+            $stmt = $pdo->prepare("INSERT INTO payees (name, user_id) VALUES (?, ?)");
+            $stmt->execute([$_POST['payee_name'], $user_id]);
+            $payee_id = $pdo->lastInsertId();
+        }
+    }
+
+    // ============ UPDATE TRANSACTION ============
+    $stmt = $pdo->prepare("UPDATE transactions SET
+        account_id = ?, category_id = ?, payee_id = ?,
+        amount = ?, transaction_type = ?, payment_method = ?, description = ?,
+        transaction_date = ?, transaction_time = ?
+        WHERE id = ? AND user_id = ?");
+
     $stmt->execute([
-        $data['account_id'],
-        $data['category_id'],
-        $data['payee_id'],
-        $data['transfer_account_id'] ?? null,
-        $data['amount'],
-        $data['transaction_type'],
-        $data['payment_method'],
-        $data['description'],
-        $data['notes'],
-        $data['transaction_date'],
-        $data['transaction_time'],
-        $data['location'],
-        $data['reference_number'],
-        $data['status'],
+        $_POST['account_id'],
+        $_POST['category_id'],
+        $payee_id,
+        $_POST['amount'],
+        $_POST['transaction_type'],
+        $_POST['payment_method'],
+        $_POST['description'] ?? '',
+        $_POST['transaction_date'],
+        $_POST['transaction_time'],
         $transaction_id,
         $user_id
     ]);
+
+    // ============ UPDATE LABEL ============
+    $label_id = $_POST['label_id'] ?? null;
+    $pdo->prepare("DELETE FROM transaction_labels WHERE transaction_id = ?")
+        ->execute([$transaction_id]);
+
+    if (!empty($label_id)) {
+        $pdo->prepare("INSERT INTO transaction_labels (transaction_id, label_id)")
+            ->execute([$transaction_id, $label_id]);
+    }
+
+    $pdo->commit();
     echo json_encode(["status" => "success"]);
 } catch (PDOException $e) {
+    $pdo->rollBack();
     echo json_encode(["status" => "error", "message" => $e->getMessage()]);
 }
-?>

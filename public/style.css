@@ -76,7 +76,7 @@ body {
   }
 
   .demo-creds {
-    font-size: 0.85rem;
+    font-size: 0.7rem;
     line-height: 1.4;
     padding: 0.5rem 0.75rem;
     text-align: center;
@@ -270,7 +270,7 @@ body {
 🧪 DEMO CREDENTIALS BOX
 =================================================== */
 .demo-creds {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   text-align: center;
   margin-bottom: 0.75rem;
   opacity: 0.9;

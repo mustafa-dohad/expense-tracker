@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Transactions</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="transactions.css" />
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const theme = localStorage.getItem("theme");
+      if (theme === "dark") {
+        document.documentElement.classList.add("dark");
+        document.body.classList.add("dark");
+      }
+    });
+  </script>
+
+</head>
+
+<body>
+  <!-- Side Nav -->
+  <nav class="side-nav">
+    <div class="nav-icons">
+      <button class="nav-icon" data-action="home">🏠</button>
+      <button class="nav-icon" data-action="profile">👤</button>
+      <button class="nav-icon" data-action="transactions">📋</button>
+      <button class="nav-icon" data-action="logout">🚪</button>
+    </div>
+    <div class="nav-footer">
+      <button id="theme-button" class="nav-icon">🌙</button>
+    </div>
+  </nav>
+
+  <!-- Mobile Header -->
+  <header class="mobile-header">
+    <h2 class="mobile-title">Transactions</h2>
+    <button id="theme-button-mobile">🌙</button>
+  </header>
+
+  <!-- Main -->
+  <main class="dashboard transaction-page">
+    <div class="card filter-card">
+      <h3>Filters</h3>
+      <select id="filter-category">
+        <option value="">All Categories</option>
+      </select>
+      <select id="filter-label">
+        <option value="">All Labels</option>
+      </select>
+      <select id="filter-payee">
+        <option value="">All Payees</option>
+      </select>
+    </div>
+
+    <div class="card transactions-card">
+      <h3>Transaction History</h3>
+      <div id="transactions-container"></div>
+    </div>
+  </main>
+
+  <!-- Edit Modal -->
+<div class="add-overlay hidden" id="edit-overlay">
+  <div class="add-form">
+    <form id="edit-form" method="POST">
+      <input class="amount-field" name="amount" placeholder="Amount (₨)" required />
+
+      <div class="line-separator"></div>
+
+      <select name="account_id" required></select>
+      <select name="category_id" required></select>
+
+      <div class="line-separator"></div>
+
+      <div class="payee-box">
+        <input type="text" name="payee_name" placeholder="Enter Payee Name" />
+      </div>
+
+      <div class="line-separator"></div>
+
+      <div class="new-label-box">
+        <select name="label_id"></select>
+        <input type="text" name="new_label" placeholder="Enter New Label Name" />
+        <button type="button">Add</button>
+      </div>
+
+      <div class="line-separator"></div>
+
+      <input type="date" name="transaction_date" required />
+      <input type="time" name="transaction_time" required />
+
+      <div class="line-separator"></div>
+
+      <select name="payment_method">
+        <option value="cash">Cash</option>
+        <option value="online">Online</option>
+        <option value="card">Card</option>
+        <option value="cheque">Cheque</option>
+        <option value="other">Other</option>
+      </select>
+
+      <select name="transaction_type" required>
+        <option value="expense">Expense</option>
+        <option value="income">Income</option>
+        <option value="transfer">Transfer</option>
+      </select>
+
+      <div class="line-separator"></div>
+
+      <textarea name="description" placeholder="Notes (optional)"></textarea>
+
+      <div class="form-buttons">
+        <button type="submit">Save</button>
+        <button type="button" id="cancel-edit">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+  <!-- Add Modal -->
+<div class="add-overlay hidden" id="add-overlay">
+  <div class="add-form">
+    <form id="transaction-form" method="POST">
+      <input class="amount-field" name="amount" placeholder="Amount (₨)" required />
+
+      <div class="line-separator"></div>
+
+      <select name="account_id" required>
+        <option value="">Select Account</option>
+        <!-- Populate dynamically -->
+      </select>
+
+      <select name="category_id" required>
+        <option value="">Select Category</option>
+        <!-- Populate dynamically -->
+      </select>
+
+      <div class="line-separator"></div>
+
+      <div class="payee-box">
+        <input type="text" name="payee_name" placeholder="Enter Payee Name" />
+      </div>
+
+      <div class="line-separator"></div>
+
+      <div class="new-label-box">
+        <select name="label_id">
+          <option value="">Select Label</option>
+          <!-- Populate dynamically -->
+        </select>
+        <input type="text" name="new_label" placeholder="Enter New Label Name" />
+        <button type="button" id="add-label-btn">Add</button>
+      </div>
+
+      <div class="line-separator"></div>
+
+      <input type="date" name="transaction_date" required />
+      <input type="time" name="transaction_time" required />
+
+      <div class="line-separator"></div>
+
+      <select name="payment_method">
+        <option value="cash">Cash</option>
+        <option value="online">Online</option>
+        <option value="card">Card</option>
+        <option value="cheque">Cheque</option>
+        <option value="other">Other</option>
+      </select>
+
+      <select name="transaction_type" required>
+        <option value="expense">Expense</option>
+        <option value="income">Income</option>
+        <option value="transfer">Transfer</option>
+      </select>
+
+      <div class="line-separator"></div>
+
+      <textarea name="description" placeholder="Notes (optional)"></textarea>
+
+      <div class="form-buttons">
+        <button type="submit">Add</button>
+        <button type="button" id="cancel-transaction">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <button class="nav-icon" data-action="home">🏠</button>
+    <button class="nav-icon" data-action="profile">👤</button>
+    <button class="nav-icon fab" data-action="add">➕</button>
+    <button class="nav-icon" data-action="transactions">📋</button>
+    <button class="nav-icon" data-action="logout">🚪</button>
+  </nav>
+
+  <!-- Floating Add Button (Desktop Only) -->
+  <button id="add-transaction-desktop" data-action="add">➕</button>
+
+  <script src="transactions.js"></script>
+</body>
+
+</html>
