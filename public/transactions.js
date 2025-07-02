@@ -57,7 +57,11 @@ document.querySelectorAll(".nav-icon").forEach((btn) => {
         window.location.href = "transactions.html";
         break;
       case "logout":
-        alert("Logging out...");
+        // Proper logout: call backend and redirect
+        fetch("backend/logout.php")
+          .then(() => {
+            window.location.href = "index.html";
+          });
         break;
       case "add":
         openAddModal();

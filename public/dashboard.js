@@ -334,13 +334,20 @@ const navButtons = {
   "🏠": "dashboard.html",
   "👤": "profile.html",
   "📋": "transactions.html",
-  "🚪": "../backend/logout.php"
+  "🚪": "logout"
 };
 document.querySelectorAll('.side-nav .nav-icon, .bottom-nav .nav-icon').forEach(button => {
   const icon = button.textContent.trim();
   if (navButtons[icon]) {
     button.addEventListener('click', () => {
-      window.location.href = navButtons[icon];
+      if (navButtons[icon] === "logout") {
+        fetch("backend/logout.php")
+          .then(() => {
+            window.location.href = "index.html";
+          });
+      } else {
+        window.location.href = navButtons[icon];
+      }
     });
   }
 });
