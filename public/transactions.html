@@ -42,6 +42,9 @@
   <main class="dashboard transaction-page">
     <div class="card filter-card">
       <h3>Filters</h3>
+      <select id="filter-month">
+        <option value="">All Months</option>
+      </select>
       <select id="filter-category">
         <option value="">All Categories</option>
       </select>
@@ -51,6 +54,7 @@
       <select id="filter-payee">
         <option value="">All Payees</option>
       </select>
+      <button class="reset-btn" id="reset-filters" type="button">Reset</button>
     </div>
 
     <div class="card transactions-card">
