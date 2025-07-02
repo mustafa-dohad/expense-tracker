@@ -4,7 +4,7 @@
 ## 🌍 Hosted Online
 
 **Try it instantly:**
-👉 [https://mustafa-dohad.infinityfreeapp.com/public/index.html](https://mustafa-dohad.infinityfreeapp.com/public/index.html)
+👉 [LINK](https://mustafa-dohad.infinityfreeapp.com/public/index.html)
 
 ---
 
