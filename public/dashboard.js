@@ -1,62 +1,86 @@
 let expenseChartInstance = null;
 let monthlyChartInstance = null;
 
-// ===========================
-// ELEMENT SELECTION
-// ===========================
+// ===================================================
+// 🌙 / ☀️ THEME TOGGLE (DESKTOP + MOBILE)
+// ===================================================
+// Handles dark mode toggle and icon update
+const themeButton = document.getElementById("theme-button");
+const themeButtonMobile = document.getElementById("theme-button-mobile");
+
+function applyThemeIcon(isDark) {
+  const icon = isDark ? "☀️" : "🌙";
+  if (themeButton) themeButton.textContent = icon;
+  if (themeButtonMobile) themeButtonMobile.textContent = icon;
+}
+
+function toggleDarkMode() {
+  const isDark = document.body.classList.toggle("dark");
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+  applyThemeIcon(isDark);
+  [themeButton, themeButtonMobile].forEach(btn => {
+    if (btn) {
+      btn.classList.add("theme-animated");
+      setTimeout(() => btn.classList.remove("theme-animated"), 400);
+    }
+  });
+  // Re-render charts and transactions for new theme
+  loadTransactions();
+  loadExpenseChart();
+  loadMonthlyChart();
+}
+
+const initialTheme = localStorage.getItem("theme") === "dark";
+if (initialTheme) {
+  document.body.classList.add("dark");
+}
+applyThemeIcon(initialTheme);
+
+themeButton?.addEventListener("click", toggleDarkMode);
+themeButtonMobile?.addEventListener("click", toggleDarkMode);
+
+// ===================================================
+// 🖱️ ELEMENT SELECTION
+// ===================================================
+// Selects all major DOM elements used in dashboard logic
 const addOverlay = document.getElementById("add-overlay");
 const transactionForm = document.getElementById("transaction-form");
 const cancelButton = document.getElementById("cancel-transaction");
 const addButton = document.getElementById("add-transaction");
 const addButtonDesktop = document.getElementById("add-transaction-desktop");
-const themeButton = document.getElementById("theme-button");
-const themeButtonMobile = document.getElementById("theme-button-mobile");
-
 const accountList = document.getElementById("account-list");
 const transactionList = document.getElementById("transactions-list");
 const topExpensesList = document.getElementById("top-expenses-list");
 const currencyList = document.getElementById("currency-list");
 const highestCategoryDisplay = document.getElementById("highest-category");
 
-// ===========================
-// MODAL CONTROLS
-// ===========================
-addButton?.addEventListener("click", () =>
-  addOverlay.classList.remove("hidden")
-);
-addButtonDesktop?.addEventListener("click", () =>
-  addOverlay.classList.remove("hidden")
-);
-
-// ✅ New Addition: Trigger Modal for Mobile FAB
+// ===================================================
+// 🪟 MODAL CONTROLS
+// ===================================================
+// Handles opening/closing of the add transaction modal
+addButton?.addEventListener("click", () => addOverlay.classList.remove("hidden"));
+addButtonDesktop?.addEventListener("click", () => addOverlay.classList.remove("hidden"));
 const mobileAddButton = document.querySelector('.bottom-nav .fab');
-mobileAddButton?.addEventListener("click", () =>
-  addOverlay.classList.remove("hidden")
-);
-
-cancelButton?.addEventListener("click", () =>
-  addOverlay.classList.add("hidden")
-);
+mobileAddButton?.addEventListener("click", () => addOverlay.classList.remove("hidden"));
+cancelButton?.addEventListener("click", () => addOverlay.classList.add("hidden"));
 window.addEventListener("click", (e) => {
   if (e.target === addOverlay) {
     addOverlay.classList.add("hidden");
   }
 });
 
-// ===========================
-// FORM SUBMISSION
-// ===========================
+// ===================================================
+// ➕ FORM SUBMISSION (ADD TRANSACTION)
+// ===================================================
+// Handles add transaction form submission
 transactionForm?.addEventListener("submit", async (e) => {
   e.preventDefault();
-
   const selectedLabel = transactionForm.querySelector('select[name="label_id"]').value;
   const newLabel = transactionForm.querySelector('input[name="new_label"]').value.trim();
-
   if (!selectedLabel && !newLabel) {
     alert("Please select an existing label or add a new one.");
     return;
   }
-
   const formData = new FormData(transactionForm);
   const res = await fetch("../backend/add_transaction.php", {
     method: "POST",
@@ -64,7 +88,6 @@ transactionForm?.addEventListener("submit", async (e) => {
   });
   const result = await res.json();
   alert(result.message);
-
   if (result.status === "success") {
     addOverlay.classList.add("hidden");
     transactionForm.reset();
@@ -72,24 +95,22 @@ transactionForm?.addEventListener("submit", async (e) => {
   }
 });
 
-// ===========================
-// LOAD ACCOUNTS
-// ===========================
+// ===================================================
+// 🏦 LOAD ACCOUNTS
+// ===================================================
+// Fetches and displays account info
 async function loadAccounts() {
   const res = await fetch(`../backend/get_accounts.php?t=${Date.now()}`, { cache: "no-cache" });
   const data = await res.json();
-
   accountList.innerHTML = "";
   const accountSelect = transactionForm.querySelector('select[name="account_id"]');
   accountSelect.innerHTML = "<option value=''>Select Account</option>";
-
   data.forEach((acc) => {
     const div = document.createElement("div");
     div.className = "account-card";
     const balance = parseFloat(acc.balance);
     div.innerHTML = `<span>${acc.name}</span><strong style="color:${balance < 0 ? 'red' : 'inherit'}">₨ ${balance.toFixed(2)}</strong>`;
     accountList.appendChild(div);
-
     const option = document.createElement("option");
     option.value = acc.id;
     option.textContent = acc.name;
@@ -97,30 +118,26 @@ async function loadAccounts() {
   });
 }
 
-// ===========================
-// LOAD TRANSACTIONS (ONLY 5)
-// ===========================
+// ===================================================
+// 📄 LOAD TRANSACTIONS (ONLY 5)
+// ===================================================
+// Fetches and displays the 5 most recent transactions
 async function loadTransactions() {
   try {
     const res = await fetch("../backend/get_transactions.php");
     const data = await res.json();
-
     transactionList.innerHTML = "";
     const displayTransactions = data.slice(0, 5);
-
     displayTransactions.forEach((tx) => {
       const isDark = document.body.classList.contains("dark");
-
       const color = tx.transaction_type === "expense"
         ? (isDark ? "#ff8787" : "#ff6b6b")
         : tx.transaction_type === "income"
           ? (isDark ? "#64ffda" : "#1dd1a1")
           : "#54a0ff";
-
       const textColor = isDark ? "#f9fafb" : "#555";
       const labelsText = Array.isArray(tx.labels) && tx.labels.length > 0
         ? tx.labels.join(", ") : (tx.labels || "N/A");
-
       const li = document.createElement("li");
       li.innerHTML = `
         <div style="color:${color}; font-weight:600;">
@@ -135,7 +152,6 @@ async function loadTransactions() {
       `;
       transactionList.appendChild(li);
     });
-
     if (data.length > 5) {
       const showMoreLi = document.createElement("li");
       showMoreLi.innerHTML = `
@@ -145,20 +161,19 @@ async function loadTransactions() {
         </a>`;
       transactionList.appendChild(showMoreLi);
     }
-
   } catch (error) {
     console.error("Error loading transactions:", error);
   }
 }
 
-// ===========================
-// LOAD CURRENCY RATES
-// ===========================
+// ===================================================
+// 💱 LOAD CURRENCY RATES
+// ===================================================
+// Fetches and displays currency exchange rates
 async function loadCurrencyRates() {
   const res = await fetch("../backend/exchange_rates.php");
   const data = await res.json();
   currencyList.innerHTML = "";
-
   for (const [currency, rate] of Object.entries(data)) {
     const li = document.createElement("li");
     li.innerHTML = `<span>${currency}</span> → <strong>₨ ${rate}</strong>`;
@@ -166,16 +181,15 @@ async function loadCurrencyRates() {
   }
 }
 
-// ===========================
-// LOAD EXPENSE CHART
-// ===========================
+// ===================================================
+// 📊 LOAD EXPENSE CHART
+// ===================================================
+// Renders the expense pie chart using Chart.js
 async function loadExpenseChart() {
   const res = await fetch("../backend/expense_stats.php");
   const data = await res.json();
   const isDark = document.body.classList.contains("dark");
-
   if (expenseChartInstance) expenseChartInstance.destroy();
-
   expenseChartInstance = new Chart(document.getElementById("expenseChart"), {
     type: "pie",
     data: {
@@ -199,16 +213,15 @@ async function loadExpenseChart() {
   });
 }
 
-// ===========================
-// LOAD MONTHLY CHART
-// ===========================
+// ===================================================
+// 📈 LOAD MONTHLY CHART
+// ===================================================
+// Renders the monthly bar chart using Chart.js
 async function loadMonthlyChart() {
   const res = await fetch("../backend/monthly_stats.php");
   const data = await res.json();
   const isDark = document.body.classList.contains("dark");
-
   if (monthlyChartInstance) monthlyChartInstance.destroy();
-
   monthlyChartInstance = new Chart(document.getElementById("monthlyChart"), {
     type: "bar",
     data: {
@@ -236,19 +249,18 @@ async function loadMonthlyChart() {
   });
 }
 
-// ===========================
-// LOAD TOP EXPENSES
-// ===========================
+// ===================================================
+// 🏆 LOAD TOP EXPENSES
+// ===================================================
+// Fetches and displays top expense categories
 async function loadTopExpenses() {
   try {
     const res = await fetch("../backend/top_expenses.php");
     const data = await res.json();
-
     topExpensesList.innerHTML = "";
     highestCategoryDisplay.innerHTML = `
       Highest Category: ${data.highest_category_name || "N/A"} — Rs. ${parseFloat(data.highest_category_amount || 0).toFixed(2)}
     `;
-
     if (Array.isArray(data.top_expenses) && data.top_expenses.length > 0) {
       data.top_expenses.forEach((exp) => {
         const li = document.createElement("li");
@@ -264,9 +276,10 @@ async function loadTopExpenses() {
   }
 }
 
-// ===========================
-// LOAD CATEGORIES
-// ===========================
+// ===================================================
+// 🗂️ LOAD CATEGORIES
+// ===================================================
+// Fetches and populates category dropdown
 async function loadCategories() {
   const res = await fetch("../backend/get_categories.php");
   const data = await res.json();
@@ -280,9 +293,10 @@ async function loadCategories() {
   });
 }
 
-// ===========================
-// LOAD LABELS
-// ===========================
+// ===================================================
+// 🏷️ LOAD LABELS
+// ===================================================
+// Fetches and populates label dropdown
 async function loadLabels() {
   const res = await fetch("../backend/get_labels.php");
   const data = await res.json();
@@ -296,9 +310,10 @@ async function loadLabels() {
   });
 }
 
-// ===========================
-// INITIAL LOAD
-// ===========================
+// ===================================================
+// 🚀 INITIAL LOAD
+// ===================================================
+// Loads all dashboard data on page load
 function reloadAllData() {
   loadAccounts();
   loadTransactions();
@@ -311,51 +326,16 @@ function reloadAllData() {
 }
 reloadAllData();
 
-// ===========================
-// DARK MODE TOGGLE (DESKTOP + MOBILE)
-// ===========================
-function applyThemeIcon(isDark) {
-  const icon = isDark ? "☀️" : "🌙";
-  if (themeButton) themeButton.textContent = icon;
-  if (themeButtonMobile) themeButtonMobile.textContent = icon;
-}
-
-function toggleDarkMode() {
-  const isDark = document.body.classList.toggle("dark");
-  localStorage.setItem("theme", isDark ? "dark" : "light");
-  applyThemeIcon(isDark);
-
-  [themeButton, themeButtonMobile].forEach(btn => {
-    if (btn) {
-      btn.classList.add("theme-animated");
-      setTimeout(() => btn.classList.remove("theme-animated"), 400);
-    }
-  });
-
-  loadTransactions();
-  loadExpenseChart();
-  loadMonthlyChart();
-}
-
-const initialTheme = localStorage.getItem("theme") === "dark";
-if (initialTheme) {
-  document.body.classList.add("dark");
-}
-applyThemeIcon(initialTheme);
-
-themeButton?.addEventListener("click", toggleDarkMode);
-themeButtonMobile?.addEventListener("click", toggleDarkMode);
-
-// ===========================
-// NAVIGATION BUTTON ACTIONS
-// ===========================
+// ===================================================
+// 🧭 NAVIGATION BUTTON ACTIONS
+// ===================================================
+// Handles navigation for sidebar and bottom nav
 const navButtons = {
   "🏠": "dashboard.html",
   "👤": "profile.html",
   "📋": "transactions.html",
   "🚪": "../backend/logout.php"
 };
-
 document.querySelectorAll('.side-nav .nav-icon, .bottom-nav .nav-icon').forEach(button => {
   const icon = button.textContent.trim();
   if (navButtons[icon]) {
@@ -365,9 +345,10 @@ document.querySelectorAll('.side-nav .nav-icon, .bottom-nav .nav-icon').forEach(
   }
 });
 
-// ===========================
-// DEBUGGING SUBMISSION
-// ===========================
+// ===================================================
+// 🐞 DEBUGGING SUBMISSION
+// ===================================================
+// Logs form data to console for debugging
 transactionForm?.addEventListener("submit", async (e) => {
   e.preventDefault();
   const formData = new FormData(transactionForm);

@@ -1,18 +1,17 @@
 /* ==========================================================
-  ROOT COLORS & DARK MODE BASE
+🎨 ROOT COLORS & DARK MODE BASE
 ========================================================== */
+/* Color variables for transactions page and dark mode */
 :root {
   --primary: #27374d;
   --accent: #9db2bf;
   --bg-light: #dde6ed;
   --text-dark: #27374d;
-
   --clr-dark: #121212;
   --clr-light: #ffffff;
   --clr-surface-a10: #282828;
   --clr-surface-a20: #3f3f3f;
   --clr-primary-a0: #26c3a1;
-
   --card-radius: 16px;
   --card-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
 }
@@ -24,15 +23,15 @@ body {
   color: var(--text-dark);
   overflow-x: hidden;
 }
-
 body.dark {
   background-color: var(--clr-dark);
   color: var(--clr-light);
 }
 
 /* ==========================================================
-  NAVIGATION SHARED STYLES
+🧭 NAVIGATION SHARED STYLES
 ========================================================== */
+/* Sidebar and mobile navigation styles */
 .side-nav {
   position: fixed;
   top: 0;
@@ -45,7 +44,6 @@ body.dark {
   justify-content: space-between;
   z-index: 10;
 }
-
 .nav-icons {
   display: flex;
   flex-direction: column;
@@ -53,7 +51,6 @@ body.dark {
   padding: 30px 0;
   gap: 25px;
 }
-
 .nav-icon {
   font-size: 1.5rem;
   padding: 12px;
@@ -62,22 +59,22 @@ body.dark {
   cursor: pointer;
   color: var(--bg-light);
 }
-
 .nav-icon:hover {
   color: var(--accent);
 }
-
 .nav-icon.active {
   color: var(--accent);
 }
-
 .nav-footer {
   display: flex;
   justify-content: center;
   padding: 30px 0;
 }
 
-/* Mobile Header */
+/* ==========================================================
+📱 MOBILE HEADER & BOTTOM NAV
+========================================================== */
+/* Mobile header and bottom navigation bar */
 .mobile-header {
   display: flex;
   justify-content: space-between;
@@ -86,12 +83,10 @@ body.dark {
   background-color: var(--primary);
   color: var(--bg-light);
 }
-
 .mobile-title {
   font-size: 1.3rem;
   margin: 0;
 }
-
 #theme-button-mobile {
   font-size: 1.8rem;
   background: none;
@@ -99,13 +94,10 @@ body.dark {
   color: inherit;
   cursor: pointer;
 }
-
 body.dark .mobile-header {
   background-color: var(--clr-surface-a20);
   color: var(--clr-light);
 }
-
-/* Bottom Nav (Mobile) */
 .bottom-nav {
   position: fixed;
   bottom: 10px;
@@ -118,97 +110,85 @@ body.dark .mobile-header {
   border-radius: 30px;
   z-index: 10;
 }
-
 .bottom-nav .nav-icon {
   font-size: 1.5rem;
   color: var(--bg-light);
 }
-
 .fab {
   font-size: 2rem;
 }
-
 @media (min-width: 769px) {
   .mobile-header,
   .bottom-nav {
     display: none;
   }
 }
-
 body.dark .side-nav {
   background-color: var(--clr-surface-a20);
 }
-
 body.dark .nav-icon {
   color: var(--clr-light);
 }
-
 body.dark .nav-icon:hover,
 body.dark .nav-icon.active {
   color: var(--clr-primary-a0);
 }
-
 body.dark .bottom-nav {
   background-color: var(--clr-surface-a20);
 }
-
 body.dark .bottom-nav .nav-icon {
   color: var(--clr-light);
 }
-
 body.dark .bottom-nav .nav-icon:hover,
 body.dark .bottom-nav .nav-icon.active {
   color: var(--clr-primary-a0);
 }
 
 /* ==========================================================
-  MAIN CONTENT AREA
+🗂️ MAIN CONTENT AREA
 ========================================================== */
+/* Main transaction page and filters */
 .transaction-page {
   margin-left: 80px;
   padding: 30px;
 }
-
 @media (max-width: 768px) {
   .transaction-page {
     margin-left: 0;
     padding: 20px;
     padding-bottom: 100px;
   }
-
   .side-nav {
     display: none;
   }
 }
-
-/* Filters */
 .filters {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
   margin-bottom: 25px;
 }
-
 .filters select {
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 1rem;
 }
-
 body.dark .filters select {
   background-color: var(--clr-surface-a10);
   color: var(--clr-light);
   border: 1px solid var(--clr-surface-a20);
 }
 
-/* Transaction List */
+/* ==========================================================
+📄 TRANSACTION LIST & GROUPING
+========================================================== */
+/* Transaction list, entry, and month grouping styles */
 #transaction-list-container {
   display: flex;
   flex-direction: column;
   gap: 18px;
 }
-
 .transaction-entry {
   background-color: #fff;
   border-radius: var(--card-radius);
@@ -216,20 +196,15 @@ body.dark .filters select {
   padding: 16px 20px;
   cursor: pointer;
 }
-
 .transaction-entry:hover {
   background-color: #f1f1f1;
 }
-
 body.dark .transaction-entry {
   background-color: var(--clr-surface-a10);
 }
-
 body.dark .transaction-entry:hover {
   background-color: var(--clr-surface-a20);
 }
-
-/* Grouping by Month */
 .transaction-month {
   font-size: 1.2rem;
   font-weight: bold;
@@ -238,8 +213,9 @@ body.dark .transaction-entry:hover {
 }
 
 /* ==========================================================
-  MODAL FORM STYLES
+🪟 MODAL FORM STYLES
 ========================================================== */
+/* Styles for add/edit transaction modal forms */
 .add-overlay {
   position: fixed;
   top: 0;
@@ -879,6 +855,20 @@ body.dark .reset-btn:active {
   background: var(--clr-primary-a0) !important;
   color: #fff !important;
   border: 1px solid var(--clr-primary-a0) !important;
+}
+
+/* Add hover effect for reset button in light mode */
+.filter-card .reset-btn:hover {
+  background-color: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+/* Add hover effect for pagination controls in light mode */
+#pagination-controls button:hover:not(:disabled) {
+  background-color: var(--primary) !important;
+  color: #fff;
+  border-color: var(--primary) !important;
 }
 
 

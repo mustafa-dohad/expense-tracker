@@ -1,6 +1,7 @@
 /* ===================================================
 🌙 THEME VARIABLES
 =================================================== */
+/* Theme color variables for light and dark mode */
 :root {
   --primary: #0fa4af;
 
@@ -31,6 +32,7 @@ body.light {
 /* ===================================================
 🔄 GLOBAL RESETS & TRANSITIONS
 =================================================== */
+/* Reset and transition for all elements */
 * {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
@@ -43,8 +45,9 @@ html, body {
 
 
 /* ===================================================
-🧍‍♂️ BODY STYLING
+🧑‍ BODY STYLING
 =================================================== */
+/* Main body layout and font */
 body {
   font-family: "Inter", sans-serif;
   background-color: var(--bg);
@@ -62,6 +65,7 @@ body {
 /* ===================================================
 📱 SMALL SCREEN FIXES
 =================================================== */
+/* Responsive tweaks for mobile */
 @media (max-width: 480px) {
   body {
     justify-content: flex-start;
@@ -90,8 +94,9 @@ body {
 
 
 /* ===================================================
-🌗 THEME TOGGLE
+🌗 THEME TOGGLE BUTTON
 =================================================== */
+/* Theme toggle button styles */
 .theme-toggle {
   position: absolute;
   top: 16px;
@@ -113,6 +118,7 @@ body {
 /* ===================================================
 🔐 AUTH CONTAINER
 =================================================== */
+/* Login/signup container */
 .auth-container {
   width: 100%;
   max-width: 420px;
@@ -127,6 +133,7 @@ body {
 /* ===================================================
 📝 FORM HEADER & TOGGLE
 =================================================== */
+/* Form title and toggle buttons */
 .title {
   font-weight: 600;
   text-align: center;
@@ -158,8 +165,9 @@ body {
 
 
 /* ===================================================
-🧾 AUTH FORM
+🗝️ AUTH FORM
 =================================================== */
+/* Login/signup form fields */
 .auth-form {
   display: flex;
   flex-direction: column;
@@ -197,8 +205,9 @@ body {
 
 
 /* ===================================================
-🔁 UTILITY CLASSES
+🛠️ UTILITY CLASSES
 =================================================== */
+/* Utility classes for hiding and messages */
 .hidden {
   display: none !important;
 }
@@ -214,6 +223,7 @@ body {
 /* ===================================================
 🔗 FOOTER & LINKS
 =================================================== */
+/* Footer and link styles */
 .footer-links {
   margin-top: 2rem;
   text-align: center;
@@ -234,8 +244,9 @@ body {
 
 
 /* ===================================================
-🔄 SPINNER / ANIMATIONS
+⏳ SPINNER / ANIMATIONS
 =================================================== */
+/* Spinner animation for loading */
 .spinner {
   display: inline-block;
   width: 14px;

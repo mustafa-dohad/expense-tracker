@@ -1,6 +1,7 @@
 /* ==========================================================
-  COLOR SCHEME
+🎨 COLOR SCHEME
 ========================================================== */
+/* Dashboard color variables for light and dark mode */
 :root {
   --primary: #27374d;
   --secondary: #526d82;
@@ -24,8 +25,9 @@
 }
 
 /* ==========================================================
-  GENERAL BASE STYLES
+🧱 GENERAL BASE STYLES
 ========================================================== */
+/* Base layout, font, and resets */
 html,
 body {
   max-width: 100%;
@@ -92,8 +94,9 @@ h3 {
 }
 
 /* ==========================================================
-  SIDE NAVIGATION
+🧭 SIDE NAVIGATION
 ========================================================== */
+/* Styles for sidebar navigation */
 .side-nav {
   position: fixed;
   left: 0;
@@ -149,8 +152,9 @@ h3 {
 }
 
 /* ==========================================================
-  MAIN DASHBOARD
+📊 MAIN DASHBOARD LAYOUT
 ========================================================== */
+/* Main dashboard grid and card layout */
 .dashboard {
   flex: 1;
   margin-left: 80px;
@@ -167,8 +171,9 @@ h3 {
 }
 
 /* ==========================================================
-  FLOATING + BUTTON (DESKTOP)
+➕ FLOATING ADD BUTTON (DESKTOP)
 ========================================================== */
+/* Floating add transaction button for desktop */
 #add-transaction-desktop {
   position: fixed;
   bottom: 30px;
@@ -190,8 +195,9 @@ body.dark #add-transaction-desktop {
 }
 
 /* ==========================================================
-  BOTTOM NAVIGATION (MOBILE)
+📱 BOTTOM NAVIGATION (MOBILE)
 ========================================================== */
+/* Bottom navigation bar for mobile */
 .bottom-nav {
   position: fixed;
   bottom: 10px;
@@ -214,8 +220,9 @@ body.dark #add-transaction-desktop {
 }
 
 /* ==========================================================
-  MODAL FORM STYLES
+🪟 MODAL FORM STYLES
 ========================================================== */
+/* Styles for add/edit transaction modal forms */
 .add-overlay {
   position: fixed;
   top: 0;
@@ -329,7 +336,7 @@ body.dark #add-transaction-desktop {
 }
 
 /* ==========================================================
-  DARK MODE
+🌓 DARK MODE
 ========================================================== */
 body.dark {
   background-color: var(--clr-surface-a0);
@@ -378,7 +385,7 @@ body.dark .nav-footer .nav-icon:hover {
 }
 
 /* ==========================================================
-  RESPONSIVE RULES
+🖥 RESPONSIVE RULES
 ========================================================== */
 @media (min-width: 769px) {
   .bottom-nav {

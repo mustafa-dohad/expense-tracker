@@ -1,6 +1,7 @@
-// ==========================
-// THEME TOGGLE
-// ==========================
+// ===================================================
+// 🌙 / ☀️ THEME TOGGLE (DESKTOP + MOBILE)
+// ===================================================
+// Handles theme switching and icon update for both desktop and mobile
 const themeButton = document.getElementById("theme-button");
 const themeButtonMobile = document.getElementById("theme-button-mobile");
 
@@ -15,7 +16,6 @@ function toggleDarkMode() {
   document.documentElement.classList.toggle("dark", isDark);
   localStorage.setItem("theme", isDark ? "dark" : "light");
   applyThemeIcon(isDark);
-
   [themeButton, themeButtonMobile].forEach((btn) => {
     if (btn) {
       btn.classList.add("theme-animated");
@@ -37,13 +37,15 @@ function toggleDarkMode() {
 themeButton?.addEventListener("click", toggleDarkMode);
 themeButtonMobile?.addEventListener("click", toggleDarkMode);
 
-// ==========================
-// NAVIGATION
-// ==========================
+// ===================================================
+// 🧭 NAVIGATION
+// ===================================================
+// Handles navigation icon clicks for main actions
+// Could use a map of actions to URLs/functions
+//
 document.querySelectorAll(".nav-icon").forEach((btn) => {
   btn.addEventListener("click", () => {
     const action = btn.dataset.action;
-
     switch (action) {
       case "home":
         window.location.href = "dashboard.html";
@@ -64,6 +66,10 @@ document.querySelectorAll(".nav-icon").forEach((btn) => {
   });
 });
 
+// ===================================================
+// 🪟 MODAL CONTROLS
+// ===================================================
+// Handles closing modals when clicking outside
 window.addEventListener("click", (e) => {
   if (e.target.id === "add-overlay") {
     document.getElementById("add-overlay").classList.add("hidden");
@@ -73,16 +79,20 @@ window.addEventListener("click", (e) => {
   }
 });
 
-// ==========================
-// TRANSACTIONS
-// ==========================
+// ===================================================
+// 📄 TRANSACTION LOADING & PAGINATION
+// ===================================================
+// Loads and displays transactions, grouped by month, with pagination
 let monthPages = [];
 let currentMonthPage = 0;
 
+/**
+ * Loads transactions from backend and displays them grouped by month.
+ * @param {Object} filters - Filtering options (category, label, payee, month)
+ */
 async function loadTransactions(filters = {}) {
   const res = await fetch("/backend/get_transactions.php");
   const data = await res.json();
-
   const grouped = groupByMonth(data, filters);
   monthPages = Object.entries(grouped);
   if (monthPages.length === 0) {
@@ -92,15 +102,12 @@ async function loadTransactions(filters = {}) {
   }
   if (currentMonthPage >= monthPages.length) currentMonthPage = monthPages.length - 1;
   if (currentMonthPage < 0) currentMonthPage = 0;
-
   const [month, txns] = monthPages[currentMonthPage];
   const container = document.getElementById("transactions-container");
   container.innerHTML = "";
-
   const group = document.createElement("div");
   group.className = "transactions-group";
   group.innerHTML = `<h4>${month}</h4>`;
-
   txns.forEach((tx) => {
     const div = document.createElement("div");
     div.className = "transaction-entry";
@@ -129,9 +136,7 @@ async function loadTransactions(filters = {}) {
       </div>`;
     group.appendChild(div);
   });
-
   container.appendChild(group);
-
   // Pagination controls
   const pagination = document.getElementById("pagination-controls");
   if (pagination) {
@@ -147,6 +152,12 @@ async function loadTransactions(filters = {}) {
   }
 }
 
+/**
+ * Groups transactions by month and applies filters.
+ * @param {Array} data - Array of transaction objects
+ * @param {Object} filters - Filtering options
+ * @returns {Object} - Map of month to transactions
+ */
 function groupByMonth(data, filters) {
   const map = {};
   const filtered = data.filter((tx) => {
@@ -159,7 +170,6 @@ function groupByMonth(data, filters) {
       (!filters.month || monthStr == filters.month)
     );
   });
-
   filtered.forEach((tx) => {
     const date = new Date(tx.transaction_date);
     const month = date.toLocaleString("default", {
@@ -169,45 +179,40 @@ function groupByMonth(data, filters) {
     if (!map[month]) map[month] = [];
     map[month].push(tx);
   });
-
   return map;
 }
 
-// ==========================
-// FILTERS
-// ==========================
+// ===================================================
+// 🔎 FILTERS
+// ===================================================
+// Loads and populates filter dropdowns for category, label, payee, and month
 async function loadFilters() {
   const [catRes, labelRes, payeeRes] = await Promise.all([
     fetch("../backend/get_categories.php"),
     fetch("../backend/get_labels.php"),
     fetch("../backend/get_payees.php"),
   ]);
-
   const categories = await catRes.json();
   const labels = await labelRes.json();
   const payees = await payeeRes.json();
-
   categories.forEach((c) => {
     const opt = document.createElement("option");
     opt.value = c.name;
     opt.textContent = c.name;
     document.getElementById("filter-category").appendChild(opt);
   });
-
   labels.forEach((l) => {
     const opt = document.createElement("option");
     opt.value = l.name;
     opt.textContent = l.name;
     document.getElementById("filter-label").appendChild(opt);
   });
-
   payees.forEach((p) => {
     const opt = document.createElement("option");
     opt.value = p.name;
     opt.textContent = p.name;
     document.getElementById("filter-payee").appendChild(opt);
   });
-
   // Populate month filter
   const res = await fetch("/backend/get_transactions.php");
   const data = await res.json();
@@ -246,29 +251,22 @@ async function loadFilters() {
   });
 });
 
-// ==========================
-// ADD FORM
-// ==========================
+// ===================================================
+// ➕ ADD FORM
+// ===================================================
+// Handles add transaction modal and form submission
 async function populateAddFormFields() {
   const [accRes, catRes, labelRes] = await Promise.all([
     fetch("../backend/get_accounts.php"),
     fetch("../backend/get_categories.php"),
     fetch("../backend/get_labels.php"),
   ]);
-
   const accText = await accRes.text();
   const catText = await catRes.text();
   const labelText = await labelRes.text();
-
-  console.log('Accounts:', accText);
-  console.log('Categories:', catText);
-  console.log('Labels:', labelText);
-
-  // Now try to parse as JSON (will fail if not valid)
   const accounts = JSON.parse(accText);
   const categories = JSON.parse(catText);
   const labels = JSON.parse(labelText);
-
   const accountSelect = document.querySelector(
     "#transaction-form select[name='account_id']"
   );
@@ -278,7 +276,6 @@ async function populateAddFormFields() {
   const labelSelect = document.querySelector(
     "#transaction-form select[name='label_id']"
   );
-
   accountSelect.innerHTML = `<option value="">Select Account</option>`;
   accounts.forEach((a) => {
     const opt = document.createElement("option");
@@ -286,7 +283,6 @@ async function populateAddFormFields() {
     opt.textContent = a.name;
     accountSelect.appendChild(opt);
   });
-
   categorySelect.innerHTML = `<option value="">Select Category</option>`;
   categories.forEach((c) => {
     const opt = document.createElement("option");
@@ -294,7 +290,6 @@ async function populateAddFormFields() {
     opt.textContent = c.name;
     categorySelect.appendChild(opt);
   });
-
   labelSelect.innerHTML = `<option value="">Select Label</option>`;
   labels.forEach((l) => {
     const opt = document.createElement("option");
@@ -325,12 +320,10 @@ document
   ?.addEventListener("submit", async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-
     const res = await fetch("../backend/add_transaction.php", {
       method: "POST",
       body: formData,
     });
-
     const result = await res.json();
     alert(result.message);
     if (result.status === "success") {
@@ -344,52 +337,36 @@ document.getElementById("cancel-transaction")?.addEventListener("click", () => {
   document.getElementById("add-overlay").classList.add("hidden");
 });
 
-// ==========================
-// EDIT FORM
-// ==========================
+// ===================================================
+// ✏️ EDIT FORM
+// ===================================================
+// Handles edit transaction modal and form submission
 async function editTransaction(id) {
-  // Load dropdowns (account, category, label etc.)
   await populateEditFormFields();
-
-  // Fetch single transaction
   const res = await fetch(`../backend/get_single_transaction.php?id=${id}`);
   const tx = await res.json();
-
-  console.log('Transaction for edit:', tx);
-
-  // Select the form
   const form = document.getElementById("edit-form");
   form.dataset.txId = id;
-
-  // Fill matching fields (amount, type, date, etc.)
   Object.entries(tx).forEach(([key, value]) => {
     const input = form.elements.namedItem(key);
     if (input) {
       input.value = value;
     }
   });
-
-  // Special handling for payee name (input field)
   if (form.elements["payee_name"] && tx["payee_name"]) {
     form.elements["payee_name"].value = tx["payee_name"];
   }
-
-  // Set label dropdown (use first label_id if array exists)
   if (form.elements["label_id"]) {
-    // Try to set the value if it exists in the dropdown
     const labelId = Array.isArray(tx.label_ids) && tx.label_ids.length > 0 ? tx.label_ids[0] : (tx.label_id || "");
     const labelSelect = form.elements["label_id"];
     if ([...labelSelect.options].some(opt => opt.value == labelId)) {
       labelSelect.value = labelId;
     } else {
-      labelSelect.value = ""; // fallback to blank
+      labelSelect.value = "";
     }
   }
-
-  // Show modal
   document.getElementById("edit-overlay").classList.remove("hidden");
 }
-
 
 async function populateEditFormFields() {
   try {
@@ -398,20 +375,12 @@ async function populateEditFormFields() {
       fetch("../backend/get_categories.php"),
       fetch("../backend/get_labels.php"),
     ]);
-
     const accText = await accRes.text();
     const catText = await catRes.text();
     const labelText = await labelRes.text();
-
-    console.log('Accounts:', accText);
-    console.log('Categories:', catText);
-    console.log('Labels:', labelText);
-
-    // Now try to parse as JSON (will fail if not valid)
     const accounts = JSON.parse(accText);
     const categories = JSON.parse(catText);
     const labels = JSON.parse(labelText);
-
     const accountSelect = document.querySelector(
       "#edit-form select[name='account_id']"
     );
@@ -421,7 +390,6 @@ async function populateEditFormFields() {
     const labelSelect = document.querySelector(
       "#edit-form select[name='label_id']"
     );
-
     accountSelect.innerHTML = `<option value="">Select Account</option>`;
     accounts.forEach((a) => {
       const opt = document.createElement("option");
@@ -429,7 +397,6 @@ async function populateEditFormFields() {
       opt.textContent = a.name;
       accountSelect.appendChild(opt);
     });
-
     categorySelect.innerHTML = `<option value="">Select Category</option>`;
     categories.forEach((c) => {
       const opt = document.createElement("option");
@@ -437,7 +404,6 @@ async function populateEditFormFields() {
       opt.textContent = c.name;
       categorySelect.appendChild(opt);
     });
-
     labelSelect.innerHTML = `<option value="">Select Label</option>`;
     labels.forEach((l) => {
       const opt = document.createElement("option");
@@ -454,46 +420,33 @@ async function populateEditFormFields() {
 document.getElementById("edit-form")?.addEventListener("submit", async (e) => {
   e.preventDefault();
   const form = e.target;
-
   const formData = new FormData(form);
-
-  // Get the label_id
   const labelId = form.elements["label_id"]?.value;
   formData.append("label_id", labelId);
-
-  // Also include transaction_id from dataset
   formData.append("transaction_id", form.dataset.txId);
-
   for (let [key, value] of formData.entries()) {
     console.log(key, value);
   }
-
   const res = await fetch("../backend/edit_transaction.php", {
     method: "POST",
     body: formData,
   });
-  
-
   const result = await res.json();
-  console.log("Edit result:", result);
   alert(result.message || "Transaction updated.");
-
   if (result.status === "success") {
     document.getElementById("edit-overlay").classList.add("hidden");
     loadTransactions();
     form.reset();
   }
-  
 });
 document.getElementById("cancel-edit")?.addEventListener("click", () => {
   document.getElementById("edit-overlay").classList.add("hidden");
 });
 
-
-
-// ==========================
-// DELETE
-// ==========================
+// ===================================================
+// 🗑️ DELETE TRANSACTION
+// ===================================================
+// Handles transaction deletion
 async function deleteTransaction(id) {
   if (confirm("Are you sure you want to delete this transaction?")) {
     await fetch(`../backend/delete_transaction.php?id=${id}`);
