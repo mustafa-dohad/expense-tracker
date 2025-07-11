@@ -2,44 +2,6 @@ let expenseChartInstance = null;
 let monthlyChartInstance = null;
 
 // ===================================================
-// 🌙 / ☀️ THEME TOGGLE (DESKTOP + MOBILE)
-// ===================================================
-// Handles dark mode toggle and icon update
-const themeButton = document.getElementById("theme-button");
-const themeButtonMobile = document.getElementById("theme-button-mobile");
-
-function applyThemeIcon(isDark) {
-  const icon = isDark ? "☀️" : "🌙";
-  if (themeButton) themeButton.textContent = icon;
-  if (themeButtonMobile) themeButtonMobile.textContent = icon;
-}
-
-function toggleDarkMode() {
-  const isDark = document.body.classList.toggle("dark");
-  localStorage.setItem("theme", isDark ? "dark" : "light");
-  applyThemeIcon(isDark);
-  [themeButton, themeButtonMobile].forEach(btn => {
-    if (btn) {
-      btn.classList.add("theme-animated");
-      setTimeout(() => btn.classList.remove("theme-animated"), 400);
-    }
-  });
-  // Re-render charts and transactions for new theme
-  loadTransactions();
-  loadExpenseChart();
-  loadMonthlyChart();
-}
-
-const initialTheme = localStorage.getItem("theme") === "dark";
-if (initialTheme) {
-  document.body.classList.add("dark");
-}
-applyThemeIcon(initialTheme);
-
-themeButton?.addEventListener("click", toggleDarkMode);
-themeButtonMobile?.addEventListener("click", toggleDarkMode);
-
-// ===================================================
 // 🖱️ ELEMENT SELECTION
 // ===================================================
 // Selects all major DOM elements used in dashboard logic
@@ -332,7 +294,7 @@ reloadAllData();
 // Handles navigation for sidebar and bottom nav
 const navButtons = {
   "🏠": "dashboard.html",
-  "👤": "profile.html",
+  "👤": "user.html",
   "📋": "transactions.html",
   "🚪": "logout"
 };
@@ -362,4 +324,10 @@ transactionForm?.addEventListener("submit", async (e) => {
   for (let [key, value] of formData.entries()) {
     console.log(key, value);
   }
+});
+
+document.addEventListener('themeChanged', () => {
+  loadTransactions();
+  loadExpenseChart();
+  loadMonthlyChart();
 });

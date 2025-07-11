@@ -5,22 +5,15 @@
   <title>Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="common.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    // Apply saved theme before page loads
-    (function () {
-      const theme = localStorage.getItem("theme");
-      if (theme === "dark") {
-        document.documentElement.classList.add("dark");
-      }
-    })();
-  </script>
+  <script src="common.js"></script>
 </head>
 
 <body>
 <script>
 // Redirect to login if not authenticated
-fetch('backend/get_user_data.php')
+fetch('../backend/get_user_data.php')
   .then(res => res.json())
   .then(data => {
     if (data.status === 'unauthorized') {
@@ -147,7 +140,7 @@ fetch('backend/get_user_data.php')
   <nav class="bottom-nav">
     <button class="nav-icon" title="Home" data-action="home">🏠</button>
     <button class="nav-icon" title="Profile" data-action="profile">👤</button>
-    <button class="nav-icon fab" title="Add Transaction">➕</button>
+    <button class="nav-icon fab" title="Add Transaction" data-action="add">➕</button>
     <button class="nav-icon" title="Transactions" data-action="transactions">📋</button>
     <button class="nav-icon" title="Logout" data-action="logout">🚪</button>
   </nav>

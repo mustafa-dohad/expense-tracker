@@ -94,64 +94,6 @@ h3 {
 }
 
 /* ==========================================================
-🧭 SIDE NAVIGATION
-========================================================== */
-/* Styles for sidebar navigation */
-.side-nav {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 80px;
-  height: 100vh;
-  background-color: var(--primary);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.nav-icons {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 30px 0;
-  gap: 25px;
-}
-
-.nav-icon {
-  font-size: 1.5rem;
-  padding: 12px;
-  color: var(--bg-light);
-  background: none;
-  border: none;
-  cursor: pointer;
-  text-align: center;
-}
-
-.nav-icon:hover {
-  color: var(--accent);
-}
-
-.nav-footer {
-  display: flex;
-  justify-content: center;
-  padding: 30px 0;
-}
-
-.nav-footer .nav-icon {
-  font-size: 1.5rem;
-  padding: 12px;
-  color: var(--bg-light);
-  background: none;
-  border: none;
-  cursor: pointer;
-  text-align: center;
-}
-
-.nav-footer .nav-icon:hover {
-  color: var(--accent);
-}
-
-/* ==========================================================
 📊 MAIN DASHBOARD LAYOUT
 ========================================================== */
 /* Main dashboard grid and card layout */
@@ -192,31 +134,6 @@ h3 {
 body.dark #add-transaction-desktop {
   background-color: var(--clr-primary-a0);
   color: var(--clr-light-a0);
-}
-
-/* ==========================================================
-📱 BOTTOM NAVIGATION (MOBILE)
-========================================================== */
-/* Bottom navigation bar for mobile */
-.bottom-nav {
-  position: fixed;
-  bottom: 10px;
-  left: 10%;
-  right: 10%;
-  display: flex;
-  justify-content: space-around;
-  background-color: var(--primary);
-  padding: 12px;
-  border-radius: 30px;
-}
-
-.bottom-nav .nav-icon {
-  font-size: 1.5rem;
-  color: var(--bg-light);
-}
-
-.fab {
-  font-size: 2rem;
 }
 
 /* ==========================================================
@@ -336,55 +253,6 @@ body.dark #add-transaction-desktop {
 }
 
 /* ==========================================================
-🌓 DARK MODE
-========================================================== */
-body.dark {
-  background-color: var(--clr-surface-a0);
-  color: var(--clr-light-a0);
-}
-
-body.dark .card {
-  background-color: var(--clr-surface-a10);
-  color: var(--clr-light-a0);
-}
-
-body.dark .side-nav,
-body.dark .bottom-nav {
-  background-color: var(--clr-surface-a20);
-}
-
-body.dark .account-card {
-  background-color: var(--clr-surface-a30);
-  color: var(--clr-light-a0);
-}
-
-body.dark .transactions-list li,
-body.dark .currency-list li,
-body.dark #top-expenses-list li {
-  border-bottom: 1px solid var(--clr-surface-a40);
-}
-
-body.dark .add-form {
-  background-color: var(--clr-surface-a10);
-}
-
-body.dark .add-form input,
-body.dark .add-form select,
-body.dark .add-form textarea {
-  background-color: var(--clr-surface-a20);
-  color: var(--clr-light-a0);
-}
-
-body.dark .add-form .line-separator {
-  border-bottom: 1px solid var(--clr-surface-a40);
-}
-
-body.dark .nav-icon:hover,
-body.dark .nav-footer .nav-icon:hover {
-  color: var(--clr-primary-a0);
-}
-
-/* ==========================================================
 🖥 RESPONSIVE RULES
 ========================================================== */
 @media (min-width: 769px) {
@@ -394,10 +262,6 @@ body.dark .nav-footer .nav-icon:hover {
 }
 
 @media (max-width: 768px) {
-  .side-nav {
-    display: none;
-  }
-
   .dashboard {
     margin-left: 0;
     padding: 20px;
@@ -427,6 +291,11 @@ body.dark .nav-footer .nav-icon:hover {
   .add-form .new-label-box input,
   .add-form .payee-box input {
     flex: 1;
+  }
+
+  .add-form input::placeholder,
+  .add-form textarea::placeholder {
+    font-size: 0.9rem;
   }
 }
 
@@ -482,4 +351,64 @@ body.dark .mobile-header {
 
 .theme-animated {
   animation: rotate-in 0.8s ease;
+}
+
+/* --- Fix input padding and box-sizing in modal --- */
+.add-form {
+  /* Add horizontal padding for space on both sides */
+  padding: 25px 25px;
+}
+
+.add-form input,
+.add-form select,
+.add-form textarea {
+  box-sizing: border-box; /* Ensures padding is included in width */
+  /* Optionally, add right margin for extra space if needed */
+  margin-right: 0;
+}
+
+/* --- Dark mode for modal buttons --- */
+body.dark .form-buttons button[type="submit"] {
+  background-color: var(--clr-primary-a0);
+  color: var(--clr-light-a0);
+}
+
+body.dark .form-buttons button[type="submit"]:hover {
+  opacity: 0.9;
+}
+
+body.dark .form-buttons button[type="button"] {
+  background-color: var(--clr-surface-a30);
+  color: var(--clr-light-a0);
+}
+
+/* Dark mode for dashboard cards */
+body.dark .card {
+  background-color: var(--clr-surface-a20);
+  color: var(--clr-light-a0);
+  box-shadow: 0px 6px 15px rgba(0,0,0,0.3);
+}
+
+/* Dark mode for modal overlay and form */
+body.dark .add-overlay {
+  background-color: rgba(18, 18, 18, 0.85); /* darker overlay */
+}
+
+body.dark .add-form {
+  background-color: var(--clr-surface-a10);
+  color: var(--clr-light-a0);
+}
+
+body.dark .add-form input,
+body.dark .add-form select,
+body.dark .add-form textarea {
+  background-color: var(--clr-surface-a20);
+  color: var(--clr-light-a0);
+  border-bottom: 1px solid #555;
+}
+
+body.dark .add-form input:focus,
+body.dark .add-form select:focus,
+body.dark .add-form textarea:focus {
+  border-bottom: 2px solid var(--clr-primary-a0);
 }
