@@ -42,7 +42,7 @@ function setProfileForm(user) {
   // Removed profile picture logic
   // Admin protection for delete
   if (user.is_admin) {
-    deleteBtn.disabled = false; // Keep enabled to show warning
+    deleteBtn.disabled = true; // Disable for admin users
     deleteBtn.textContent = 'Delete Account (Admin Protected)';
     deleteBtn.title = 'Admin accounts cannot be deleted for security reasons';
     deleteBtn.classList.add('admin-protected');
@@ -129,7 +129,7 @@ passwordForm.addEventListener('submit', async (e) => {
 // Section 7: Delete Account (Admin-Protected)
 // -------------------------------
 deleteBtn.addEventListener('click', async () => {
-  // Check if user is admin and show warning
+  // Double-check admin protection (in case button was somehow enabled)
   if (currentUser && currentUser.is_admin) {
     showStatus('⚠️ Admin accounts cannot be deleted for security reasons', 'error');
     return;

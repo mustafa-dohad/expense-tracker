@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Expense Tracker</title>
+  <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <h1>🔧 Admin Panel</h1>
+      <div class="header-actions">
+        <button id="theme-toggle" class="theme-toggle">🌙</button>
+        <button id="logout-btn" class="logout-btn">🚪 Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="admin-container">
+      <!-- Admin Info -->
+      <div class="admin-info">
+        <h2>Welcome, <span id="admin-name">Admin</span></h2>
+        <p>Manage users and system settings</p>
+      </div>
+
+      <!-- User Management Section -->
+      <div class="user-management">
+        <div class="section-header">
+          <h3>👥 User Management</h3>
+          <button id="refresh-users" class="btn-secondary">🔄 Refresh</button>
+        </div>
+        
+        <div class="users-table-container">
+          <table id="users-table" class="users-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Joined</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="users-tbody">
+              <!-- Users will be loaded here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Status Messages -->
+      <div id="status-msg" class="status-msg"></div>
+    </div>
+  </main>
+
+  <!-- Navigation -->
+  <nav class="bottom-nav">
+    <button class="nav-icon" title="Dashboard" data-action="dashboard">🏠</button>
+    <button class="nav-icon" title="Admin Panel" data-action="admin" class="active">🔧</button>
+    <button class="nav-icon" title="Profile" data-action="profile">👤</button>
+    <button class="nav-icon" title="Transactions" data-action="transactions">📋</button>
+    <button class="nav-icon" title="Logout" data-action="logout">🚪</button>
+  </nav>
+
+  <!-- Script -->
+  <script src="admin.js"></script>
+</body>
+</html> 
