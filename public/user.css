@@ -435,11 +435,12 @@ body.dark .form-group input:disabled {
 }
 
 .btn-danger:disabled {
-  background: var(--clr-surface-a30);
-  color: var(--clr-surface-a40);
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
+  background: #95a5a6 !important;
+  color: #7f8c8d !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+  opacity: 0.6 !important;
 }
 
 /* --- Admin Protected Button --- */
@@ -457,6 +458,21 @@ body.dark .form-group input:disabled {
 }
 
 .btn-danger.admin-protected::before {
+  content: "🔒 ";
+  margin-right: 8px;
+}
+
+/* --- Admin Protected Button When Disabled --- */
+.btn-danger.admin-protected:disabled {
+  background: #95a5a6 !important;
+  color: #7f8c8d !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+  opacity: 0.6 !important;
+}
+
+.btn-danger.admin-protected:disabled::before {
   content: "🔒 ";
   margin-right: 8px;
 }

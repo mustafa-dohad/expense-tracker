@@ -43,7 +43,7 @@ function setProfileForm(user) {
   // Admin protection for delete
   if (user.is_admin) {
     deleteBtn.disabled = true; // Disable for admin users
-    deleteBtn.textContent = 'Delete Account (Admin Protected)';
+    deleteBtn.textContent = '🔒 Delete Account (ADMIN PROTECTED)';
     deleteBtn.title = 'Admin accounts cannot be deleted for security reasons';
     deleteBtn.classList.add('admin-protected');
   } else {
@@ -129,13 +129,21 @@ passwordForm.addEventListener('submit', async (e) => {
 // Section 7: Delete Account (Admin-Protected)
 // -------------------------------
 deleteBtn.addEventListener('click', async () => {
-  // Double-check admin protection (in case button was somehow enabled)
+  // Triple-check admin protection (in case button was somehow enabled)
   if (currentUser && currentUser.is_admin) {
     showStatus('⚠️ Admin accounts cannot be deleted for security reasons', 'error');
     return;
   }
   
-  if (!confirm('⚠️ WARNING: This will permanently delete your account and all your data. This action cannot be undone.\n\nAre you absolutely sure you want to proceed?')) return;
+  // Extra safety check - prevent if button is disabled
+  if (deleteBtn.disabled) {
+    showStatus('⚠️ Delete account is disabled for admin users', 'error');
+    return;
+  }
+  
+  // Extra confirmation for safety
+  const confirmMessage = '⚠️ WARNING: This will permanently delete your account and all your data. This action cannot be undone.\n\nAre you absolutely sure you want to proceed?';
+  if (!confirm(confirmMessage)) return;
   
   try {
     const res = await fetch('../backend/delete_user.php', {
