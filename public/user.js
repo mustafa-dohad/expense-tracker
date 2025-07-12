@@ -41,10 +41,10 @@ function setProfileForm(user) {
   profileForm.elements['timezone'].value = user.timezone || 'UTC';
   // Removed profile picture logic
   // Admin protection for delete
-  if (user.is_admin) {
-    deleteBtn.disabled = true; // Disable for admin users
-    deleteBtn.textContent = '🔒 Delete Account (ADMIN PROTECTED)';
-    deleteBtn.title = 'Admin accounts cannot be deleted for security reasons';
+  if (user.id === 3) {
+    deleteBtn.disabled = true; // Disable for user ID 3
+    deleteBtn.textContent = '🔒 Delete Account (PROTECTED)';
+    deleteBtn.title = 'This account cannot be deleted.';
     deleteBtn.classList.add('admin-protected');
   } else {
     deleteBtn.disabled = false;
@@ -129,19 +129,30 @@ passwordForm.addEventListener('submit', async (e) => {
 // Section 7: Delete Account (Admin-Protected)
 // -------------------------------
 deleteBtn.addEventListener('click', async () => {
-  // Triple-check admin protection (in case button was somehow enabled)
-  if (currentUser && currentUser.is_admin) {
-    showStatus('⚠️ Admin accounts cannot be deleted for security reasons', 'error');
+  // Debug: Log current user info
+  console.log('Current user:', currentUser);
+  console.log('Button disabled:', deleteBtn.disabled);
+  console.log('Button text:', deleteBtn.textContent);
+  
+  // Triple-check protection for user ID 3 (in case button was somehow enabled)
+  if (currentUser && currentUser.id === 3) {
+    showStatus('⚠️ This account cannot be deleted.', 'error');
     return;
   }
   
   // Extra safety check - prevent if button is disabled
   if (deleteBtn.disabled) {
-    showStatus('⚠️ Delete account is disabled for admin users', 'error');
+    showStatus('⚠️ Delete account is disabled for this user', 'error');
     return;
   }
   
-  // Extra confirmation for safety
+  // For user ID 3, NEVER show confirmation dialog
+  if (currentUser && currentUser.id === 3) {
+    showStatus('⚠️ This account cannot be deleted.', 'error');
+    return;
+  }
+  
+  // Extra confirmation for safety (only for non-admin users)
   const confirmMessage = '⚠️ WARNING: This will permanently delete your account and all your data. This action cannot be undone.\n\nAre you absolutely sure you want to proceed?';
   if (!confirm(confirmMessage)) return;
   

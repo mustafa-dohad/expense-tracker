@@ -34,6 +34,12 @@ if ($user['is_admin']) {
     exit;
 }
 
+// Prevent user ID 3 from being deleted
+if ($user_id == 3) {
+    echo json_encode(['success' => false, 'message' => 'This account cannot be deleted.']);
+    exit;
+}
+
 // Delete user (only non-admin users can be deleted)
 $stmt = $pdo->prepare('DELETE FROM users WHERE id = ? AND is_admin = FALSE');
 if ($stmt->execute([$user_id])) {

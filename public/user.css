@@ -470,11 +470,33 @@ body.dark .form-group input:disabled {
   transform: none !important;
   box-shadow: none !important;
   opacity: 0.6 !important;
+  border: 2px solid #bdc3c7 !important;
 }
 
 .btn-danger.admin-protected:disabled::before {
   content: "🔒 ";
   margin-right: 8px;
+  font-size: 1.2em;
+}
+
+/* Make the lock more visible */
+.btn-danger.admin-protected:disabled {
+  position: relative;
+}
+
+.btn-danger.admin-protected:disabled::after {
+  content: "ADMIN PROTECTED";
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #e74c3c;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.7em;
+  font-weight: bold;
+  white-space: nowrap;
 }
 
 body.dark .btn-danger.admin-protected {

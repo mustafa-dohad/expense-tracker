@@ -12,7 +12,7 @@ $user_id = $_SESSION["user_id"];
 
 try {
     // Get user details
-    $stmt = $pdo->prepare("SELECT first_name, last_name, email, phone, currency_code, timezone, profile_picture, is_admin FROM users WHERE id = :user_id");
+    $stmt = $pdo->prepare("SELECT id, first_name, last_name, email, phone, currency_code, timezone, profile_picture, is_admin FROM users WHERE id = :user_id");
     $stmt->execute(["user_id" => $user_id]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
