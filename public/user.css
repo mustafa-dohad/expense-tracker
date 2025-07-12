@@ -442,6 +442,34 @@ body.dark .form-group input:disabled {
   box-shadow: none;
 }
 
+/* --- Admin Protected Button --- */
+.btn-danger.admin-protected {
+  background: #f39c12;
+  color: white;
+  box-shadow: 0 4px 16px rgba(243, 156, 18, 0.3);
+  position: relative;
+}
+
+.btn-danger.admin-protected:hover {
+  background: #e67e22;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(243, 156, 18, 0.4);
+}
+
+.btn-danger.admin-protected::before {
+  content: "🔒 ";
+  margin-right: 8px;
+}
+
+body.dark .btn-danger.admin-protected {
+  background: #f39c12;
+  color: white;
+}
+
+body.dark .btn-danger.admin-protected:hover {
+  background: #e67e22;
+}
+
 /* --- Password Section --- */
 .password-section {
   margin-top: 18px;

@@ -162,9 +162,12 @@ body.dark {
   color: var(--clr-light-a0);
 }
 
-body.dark .side-nav,
-body.dark .bottom-nav {
+body.dark .side-nav {
   background-color: var(--clr-surface-a20);
+}
+
+body.dark .bottom-nav {
+  background-color: var(--clr-surface-a30);
 }
 
 body.dark .nav-icon:hover,

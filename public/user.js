@@ -42,11 +42,15 @@ function setProfileForm(user) {
   // Removed profile picture logic
   // Admin protection for delete
   if (user.is_admin) {
-    deleteBtn.disabled = true;
-    deleteBtn.title = 'Admin accounts cannot be deleted';
+    deleteBtn.disabled = false; // Keep enabled to show warning
+    deleteBtn.textContent = 'Delete Account (Admin Protected)';
+    deleteBtn.title = 'Admin accounts cannot be deleted for security reasons';
+    deleteBtn.classList.add('admin-protected');
   } else {
     deleteBtn.disabled = false;
+    deleteBtn.textContent = 'Delete Account';
     deleteBtn.title = '';
+    deleteBtn.classList.remove('admin-protected');
   }
   // Set profile name and email in header
   document.getElementById('profile-name').textContent = user.first_name + ' ' + user.last_name;
@@ -125,8 +129,14 @@ passwordForm.addEventListener('submit', async (e) => {
 // Section 7: Delete Account (Admin-Protected)
 // -------------------------------
 deleteBtn.addEventListener('click', async () => {
-  if (!currentUser || currentUser.is_admin) return;
+  // Check if user is admin and show warning
+  if (currentUser && currentUser.is_admin) {
+    showStatus('⚠️ Admin accounts cannot be deleted for security reasons', 'error');
+    return;
+  }
+  
   if (!confirm('⚠️ WARNING: This will permanently delete your account and all your data. This action cannot be undone.\n\nAre you absolutely sure you want to proceed?')) return;
+  
   try {
     const res = await fetch('../backend/delete_user.php', {
       method: 'POST',
