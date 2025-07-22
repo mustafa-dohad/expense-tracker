@@ -1,29 +1,3 @@
-// ===================================================
-// 🌙 / ☀️ THEME TOGGLE WITH PERSISTENCE
-// ===================================================
-const themeButton = document.getElementById("theme-button");
-
-// Apply saved theme on load
-const savedTheme = localStorage.getItem("theme");
-if (savedTheme === "light") {
-  document.body.classList.add("light");
-  themeButton.textContent = "☀️";
-} else {
-  document.body.classList.remove("light"); // dark by default
-  themeButton.textContent = "🌙";
-}
-
-themeButton?.addEventListener("click", () => {
-  themeButton.classList.add("spinning");
-
-  setTimeout(() => {
-    const isLight = document.body.classList.toggle("light");
-    themeButton.textContent = isLight ? "☀️" : "🌙";
-    localStorage.setItem("theme", isLight ? "light" : "dark");
-    themeButton.classList.remove("spinning");
-  }, 150);
-});
-
 
 // ===================================================
 // 🔁 TAB SWITCH LOGIC
